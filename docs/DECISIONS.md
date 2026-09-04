@@ -1,0 +1,79 @@
+# DECISIONS
+
+> Ábrelo cuando vayas a decidir algo estructural, o cuando algo ya decidido te parezca
+> discutible.
+>
+> **Para qué sirve:** cada sesión de Claude Code empieza sin memoria de las anteriores.
+> Sin este archivo, las mismas decisiones se vuelven a discutir cada semana y el código
+> acaba con dos formas de hacer lo mismo.
+>
+> **Cómo se usa:** una entrada por decisión estructural. Escribe también **por qué se
+> descartó la alternativa** — es la parte que evita revertir sin querer. Propón las
+> entradas nuevas al desarrollador; no las añadas por tu cuenta.
+
+---
+
+### D-001 · 3D real con cámara cenital, no sprites 2D
+
+**Decidido.** El original de referencia usaba sprites pre-renderizados desde modelos 3D.
+Hoy eso obliga a renderizar cada monstruo en 8 o 16 direcciones por cada animación.
+En 3D real se obtiene el mismo aspecto con luces dinámicas, sombras y partículas, y el
+apuntado se resuelve con un rayo contra un plano.
+**Descartado:** 2D puro con sprites — coste de arte prohibitivo para un desarrollador solo.
+
+### D-002 · C# en lugar de GDScript
+
+**Decidido.** Preferencia del desarrollador y uso de Visual Studio.
+**Coste asumido:** la mayoría de tutoriales de Godot están en GDScript y hay que
+traducirlos. Obliga a usar el build .NET de Godot.
+
+### D-003 · Pocos enemigos, no hordas
+
+**Decidido.** Cambia el género respecto a la referencia: de shooter de hordas a combate
+táctico cenital. Permite enemigos con IA real y evita necesitar object pooling y
+MultiMesh desde el primer día.
+**Consecuencia:** las armas son medievales y de cadencia baja; la munición escasea.
+
+### D-004 · Armas guiadas por datos (`Resource`)
+
+**Decidido.** Cada arma es un `.tres`, no una clase. Añadir un arma no debe requerir
+código nuevo. Es la prueba de cierre del hito 2.
+**Descartado:** una clase por arma — se vuelve inmanejable a partir de la cuarta.
+
+### D-005 · Guardado solo entre misiones
+
+**Decidido.** Más simple de programar y más tenso de jugar que los puntos de guardado
+dentro del nivel.
+**Revisable** si las misiones acaban durando más de 15 minutos.
+
+### D-006 · Placeholders CC0 hasta el hito 6
+
+**Decidido.** La generación de modelos con IA funciona bien para props, pero animar
+criaturas sigue siendo el cuello de botella. Los personajes de los hitos 1-3 salen de
+bibliotecas CC0 ya riggeadas.
+**Descartado:** modelar los tres monstruos antes de programar — dos semanas sin nada
+jugable.
+
+
+### D-007 · VS Code en lugar de Visual Studio 2022
+
+**Decidido.** VS Code ya estaba instalado y con la extensión C# Dev Kit cubre lo que
+necesita el proyecto: IntelliSense, `dotnet build` y depuración adjunta a Godot.
+**Descartado:** Visual Studio 2022 Community — unos 10 GB de instalación para un
+beneficio marginal en un proyecto de un solo desarrollador.
+**Matiza D-002**, que justificaba C# en parte por «uso de Visual Studio». La elección de
+C# se mantiene por preferencia del desarrollador.
+
+### D-008 · La esquiva no entra en el hito 1
+
+**Decidido.** Los criterios de cierre del hito 1 no la mencionan y el bucle mínimo
+—matar o morir— se sostiene sin ella. Esquivar solo significa algo cuando hay varios
+ataques telegrafiados que leer, y eso llega con el bestiario.
+**Revisable** en el hito 3, cuando coexistan los tres arquetipos.
+
+---
+
+## Pendientes de decidir
+
+- ¿Al morir se pierde la misión entera o hay reintentos limitados?
+- Nombre definitivo del juego.

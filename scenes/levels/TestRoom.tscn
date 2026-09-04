@@ -1,0 +1,85 @@
+[gd_scene format=3 uid="uid://12batns5h4i4"]
+
+[ext_resource type="Script" uid="uid://cfwf5hi1581gd" path="res://scripts/player/PlayerController.cs" id="1_oqbmf"]
+[ext_resource type="Script" uid="uid://b7thb778sdkk7" path="res://scripts/player/CameraRig.cs" id="2_arrdh"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_x60sr"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_aiegb"]
+sky_material = SubResource("ProceduralSkyMaterial_x60sr")
+
+[sub_resource type="Environment" id="Environment_oqbmf"]
+background_mode = 2
+sky = SubResource("Sky_aiegb")
+glow_enabled = true
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ifow5"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_wvhbo"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_wvhbo"]
+size = Vector3(0.15, 0.15, 0.6)
+
+[node name="TestRoom" type="Node3D" unique_id=776816157]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=150964444]
+environment = SubResource("Environment_oqbmf")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=553170482]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Floor" type="CSGBox3D" parent="." unique_id=1357975251]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+use_collision = true
+size = Vector3(20, 0.5, 20)
+
+[node name="WallNorth" type="CSGBox3D" parent="." unique_id=1824521036]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -10.25)
+use_collision = true
+size = Vector3(21, 3, 0.5)
+
+[node name="WallSouth" type="CSGBox3D" parent="." unique_id=1945619506]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 10.25)
+use_collision = true
+size = Vector3(21, 3, 0.5)
+
+[node name="WallEast" type="CSGBox3D" parent="." unique_id=761607577]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.25, 1.5, 0)
+use_collision = true
+size = Vector3(0.5, 3, 21)
+
+[node name="WallWest" type="CSGBox3D" parent="." unique_id=1662892745]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.25, 1.5, 0)
+use_collision = true
+size = Vector3(0.5, 3, 21)
+
+[node name="Player" type="CharacterBody3D" parent="." unique_id=1952670564]
+collision_layer = 2
+script = ExtResource("1_oqbmf")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player" unique_id=1704047257]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_ifow5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player" unique_id=1242792407]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+mesh = SubResource("CapsuleMesh_wvhbo")
+
+[node name="FacingMarker" type="MeshInstance3D" parent="Player" unique_id=2064552391]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -0.5)
+mesh = SubResource("BoxMesh_wvhbo")
+
+[node name="CameraRig" type="Node3D" parent="." unique_id=2096064119 node_paths=PackedStringArray("Target")]
+script = ExtResource("2_arrdh")
+Target = NodePath("../Player")
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig" unique_id=1997541884]
+transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 0, 12.124, 7)
+fov = 50.0

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "deadkillers-docs": {
+      "command": "python",
+      "args": ["tools/docs-mcp/server.py"]
+    }
+  }
+}

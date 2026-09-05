@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "werewolf_telegraph"
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.72, 0.15, 0.5)
+emission_enabled = true
+emission = Color(1, 0.72, 0.15, 1)
+emission_energy_multiplier = 1.1

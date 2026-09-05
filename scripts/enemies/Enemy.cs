@@ -27,14 +27,12 @@ public partial class Enemy : CharacterBody3D
     [Export] public CollisionShape3D AttackShape { get; set; }
 
     // Cuerpo visible. Puede ser una cápsula de placeholder o la raíz de un modelo
-    // importado: el color y el telegrafiado se aplican a todas sus mallas.
+    // importado. El enemigo no lo pinta: de eso se encarga BodyEffects.
     [Export] public Node3D Body { get; set; }
 
-    [Export] public AudioStreamPlayer3D Voice { get; set; }
+    [Export] public BodyEffects Effects { get; set; }
 
-    // Material del arquetipo. Marcado como local a la escena para que cada instancia
-    // lleve el suyo y pueda telegrafiar sin encender a los demas.
-    [Export] public Material BodyMaterial { get; set; }
+    [Export] public AudioStreamPlayer3D Voice { get; set; }
 
     // Se deja vacío: se resuelve solo buscando al jugador por su grupo.
     [Export] public Node3D Target { get; set; }
@@ -42,7 +40,6 @@ public partial class Enemy : CharacterBody3D
     private const float MinLookDistance = 0.01f;
     // El aviso ocupa casi un tercio del ciclo del enemigo, así que un brillo fuerte
     // deja de leerse como aviso y pasa a ser su aspecto normal. Basta con que se note.
-    private const float TelegraphGlow = 0.8f;
 
     private float _gravity;
     private Vector3 _lungeDirection = Vector3.Forward;
@@ -51,9 +48,7 @@ public partial class Enemy : CharacterBody3D
     private PackedScene _drop;
     private int _minGold;
     private int _maxGold;
-    private StandardMaterial3D _material;
-    private Color _restColor;
-    private System.Collections.Generic.List<MeshInstance3D> _meshes;
+
 
     public bool HasTarget => Target != null && IsInstanceValid(Target);
 
@@ -114,19 +109,11 @@ public partial class Enemy : CharacterBody3D
         _minGold = Data.MinGold;
         _maxGold = Data.MaxGold;
 
-        // El material está marcado como local a la escena, así que cada instancia tiene
-        // el suyo y puede llevar su propio color sin pisar a los demás.
-        _meshes = Meshes.CollectFrom(Body);
-
-        if (BodyMaterial is StandardMaterial3D material)
+        // El aviso de ataque lo pinta BodyEffects por encima del modelo, para que el
+        // monstruo conserve la paleta de su hoja de concepto.
+        if (Effects != null)
         {
-            _material = material;
-            _material.AlbedoColor = Data.BodyColor;
-            _restColor = Data.BodyColor;
-
-            // El modelo importado trae sus propios materiales; se sustituyen por el del
-            // arquetipo para que un solo .glb sirva a varios colores.
-            Meshes.SetOverride(_meshes, _material);
+            Effects.TelegraphMaterial = Data.TelegraphMaterial;
         }
     }
 
@@ -143,7 +130,6 @@ public partial class Enemy : CharacterBody3D
     {
         // Soltar la referencia al recurso: un campo de C# lo mantiene vivo más allá del
         // cierre del motor y Godot lo denuncia como fuga (D-011).
-        _material = null;
         Data = null;
 
         // Parar ANTES de soltar el stream: un sonido a medias al cerrar deja vivo su
@@ -154,14 +140,7 @@ public partial class Enemy : CharacterBody3D
             Voice.Stream = null;
         }
 
-        // El material es local a la escena, así que cada instancia tiene el suyo: hay
-        // que soltarlo explícitamente o se queda vivo al cerrar.
-        if (_meshes != null)
-        {
-            Meshes.SetOverride(_meshes, null);
-            Meshes.SetOverlay(_meshes, null);
-            _meshes = null;
-        }
+
     }
 
     /// <summary>
@@ -296,15 +275,7 @@ public partial class Enemy : CharacterBody3D
     /// </summary>
     public void SetTelegraph(bool active)
     {
-        if (_material == null || Data == null)
-        {
-            return;
-        }
-
-        _material.AlbedoColor = active ? Data.TelegraphColor : _restColor;
-        _material.EmissionEnabled = active;
-        _material.Emission = Data.TelegraphColor;
-        _material.EmissionEnergyMultiplier = active ? TelegraphGlow : 0.0f;
+        Effects?.SetTelegraph(active);
     }
 
     /// <summary>Aviso audible, la otra mitad del telegrafiado. Cada tipo suena distinto.</summary>

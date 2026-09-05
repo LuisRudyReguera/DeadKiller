@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="EnemyData" format=3]
 
 [ext_resource type="Script" path="res://scripts/enemies/EnemyData.cs" id="1_script"]
+[ext_resource type="StandardMaterial3D" path="res://resources/telegraph/werewolf_telegraph.tres" id="4_tele"]
 [ext_resource type="PackedScene" path="res://scenes/pickups/ItemPickup.tscn" id="3_drop"]
 [ext_resource type="AudioStream" path="res://audio/werewolf_growl.wav" id="2_sound"]
 
@@ -25,9 +26,8 @@ RecoveryDuration = 0.6
 StrafeStrength = 0.0
 BlinkInterval = 0.0
 BlinkDistance = 4.0
-BodyColor = Color(0.55, 0.11, 0.11, 1)
-TelegraphColor = Color(1, 0.72, 0.15, 1)
 WarningSound = ExtResource("2_sound")
 MinGold = 5
 MaxGold = 10
 DropScene = ExtResource("3_drop")
+TelegraphMaterial = ExtResource("4_tele")

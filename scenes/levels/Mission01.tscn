@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://b7thb778sdkk7" path="res://scripts/player/CameraRig.cs" id="2_rig"]
 [ext_resource type="Script" path="res://scripts/components/HealthComponent.cs" id="3_health"]
 [ext_resource type="Script" path="res://scripts/components/HitboxComponent.cs" id="4_hitbox"]
-[ext_resource type="Script" path="res://scripts/components/HitFlashComponent.cs" id="5_flash"]
+[ext_resource type="Script" path="res://scripts/components/BodyEffects.cs" id="5_effects"]
 [ext_resource type="StandardMaterial3D" path="res://resources/hit_flash_material.tres" id="6_flashmat"]
 [ext_resource type="StandardMaterial3D" path="res://resources/sword_arc_material.tres" id="7_arcmat"]
 [ext_resource type="Script" path="res://scripts/weapons/WeaponHolder.cs" id="8_holder"]
@@ -31,7 +31,6 @@
 [ext_resource type="StandardMaterial3D" path="res://resources/outer_ground.tres" id="28_ground"]
 [ext_resource type="StandardMaterial3D" path="res://resources/hunter_body.tres" id="29_hunter"]
 [ext_resource type="PackedScene" path="res://models/hunter.glb" id="32_huntermodel"]
-[ext_resource type="Script" path="res://scripts/components/BodyTint.cs" id="33_tint"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]
 sky_horizon_color = Color(0.42, 0.4, 0.46, 1)
@@ -163,14 +162,9 @@ script = ExtResource("3_health")
 MaxHealth = 100
 FlatArmor = 0
 
-[node name="BodyTint" type="Node" parent="Player" node_paths=PackedStringArray("Body")]
-script = ExtResource("33_tint")
+[node name="BodyEffects" type="Node" parent="Player" node_paths=PackedStringArray("Body", "Health")]
+script = ExtResource("5_effects")
 Body = NodePath("../Model")
-Material = ExtResource("29_hunter")
-
-[node name="HitFlash" type="Node" parent="Player" node_paths=PackedStringArray("Target", "Health")]
-script = ExtResource("5_flash")
-Target = NodePath("../Model")
 Health = NodePath("../HealthComponent")
 FlashMaterial = ExtResource("6_flashmat")
 

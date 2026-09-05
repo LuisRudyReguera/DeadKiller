@@ -75,10 +75,9 @@ public partial class EnemyData : Resource
 
     // --- Presentación ---
 
-    [Export] public Color BodyColor { get; set; } = new(0.55f, 0.11f, 0.11f);
-
-    // Color al que vira mientras avisa. Tiene que leerse de un vistazo desde la cámara.
-    [Export] public Color TelegraphColor { get; set; } = new(1.0f, 0.72f, 0.15f);
+    // El color del cuerpo ya NO está aquí: viene con el modelo, que trae la paleta de su
+    // hoja de concepto. Aquí solo queda el aviso, que se superpone encima (D-021).
+    [Export] public Material TelegraphMaterial { get; set; }
 
     // Aviso sonoro propio de cada arquetipo: es criterio de cierre del hito 3 que no
     // suenen todos igual.

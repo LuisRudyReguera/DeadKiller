@@ -9,7 +9,7 @@
 [ext_resource type="PackedScene" path="res://scenes/enemies/Vampire.tscn" id="19_vamp"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/Demon.tscn" id="20_demon"]
 [ext_resource type="AudioStream" path="res://audio/hit_impact.wav" id="8_impact"]
-[ext_resource type="Script" path="res://scripts/components/HitFlashComponent.cs" id="9_flash"]
+[ext_resource type="Script" path="res://scripts/components/BodyEffects.cs" id="9_effects"]
 [ext_resource type="StandardMaterial3D" path="res://resources/hit_flash_material.tres" id="10_flashmat"]
 [ext_resource type="StandardMaterial3D" path="res://resources/sword_arc_material.tres" id="11_arcmat"]
 [ext_resource type="Script" path="res://scripts/weapons/WeaponHolder.cs" id="12_holder"]
@@ -110,9 +110,9 @@ script = ExtResource("4_health")
 MaxHealth = 100
 FlatArmor = 0
 
-[node name="HitFlash" type="Node" parent="Player" node_paths=PackedStringArray("Target", "Health")]
-script = ExtResource("9_flash")
-Target = NodePath("../MeshInstance3D")
+[node name="BodyEffects" type="Node" parent="Player" node_paths=PackedStringArray("Body", "Health")]
+script = ExtResource("9_effects")
+Body = NodePath("../MeshInstance3D")
 Health = NodePath("../HealthComponent")
 FlashMaterial = ExtResource("10_flashmat")
 

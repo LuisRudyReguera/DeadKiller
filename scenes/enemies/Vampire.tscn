@@ -5,7 +5,7 @@
 [ext_resource type="Script" path="res://scripts/components/HealthComponent.cs" id="3_health"]
 [ext_resource type="Script" path="res://scripts/components/StateMachine.cs" id="4_machine"]
 [ext_resource type="Script" path="res://scripts/components/HitboxComponent.cs" id="5_hitbox"]
-[ext_resource type="Script" path="res://scripts/components/HitFlashComponent.cs" id="6_flash"]
+[ext_resource type="Script" path="res://scripts/components/BodyEffects.cs" id="6_effects"]
 [ext_resource type="StandardMaterial3D" path="res://resources/hit_flash_material.tres" id="7_flashmat"]
 [ext_resource type="Script" path="res://scripts/enemies/states/IdleState.cs" id="8_idle"]
 [ext_resource type="Script" path="res://scripts/enemies/states/AlertState.cs" id="9_alert"]
@@ -20,16 +20,11 @@
 radius = 0.36
 height = 1.9
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_body"]
-resource_local_to_scene = true
-albedo_color = Color(0.5, 0.5, 0.5, 1)
-roughness = 0.85
-
 [sub_resource type="SphereShape3D" id="SphereShape3D_reach"]
 resource_local_to_scene = true
 radius = 1.8
 
-[node name="Vampire" type="CharacterBody3D" groups=["enemy"] node_paths=PackedStringArray("Health", "States", "Attack", "AttackShape", "Body", "Voice")]
+[node name="Vampire" type="CharacterBody3D" groups=["enemy"] node_paths=PackedStringArray("Health", "States", "Attack", "AttackShape", "Body", "Voice", "Effects")]
 collision_layer = 4
 collision_mask = 3
 script = ExtResource("1_enemy")
@@ -40,7 +35,7 @@ Attack = NodePath("AttackHitbox")
 AttackShape = NodePath("AttackHitbox/CollisionShape3D")
 Body = NodePath("Model")
 Voice = NodePath("Voice")
-BodyMaterial = SubResource("StandardMaterial3D_body")
+Effects = NodePath("BodyEffects")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
@@ -53,9 +48,9 @@ script = ExtResource("3_health")
 MaxHealth = 40
 FlatArmor = 0
 
-[node name="HitFlash" type="Node" parent="." node_paths=PackedStringArray("Target", "Health")]
-script = ExtResource("6_flash")
-Target = NodePath("../Model")
+[node name="BodyEffects" type="Node" parent="." node_paths=PackedStringArray("Body", "Health")]
+script = ExtResource("6_effects")
+Body = NodePath("../Model")
 Health = NodePath("../HealthComponent")
 FlashMaterial = ExtResource("7_flashmat")
 

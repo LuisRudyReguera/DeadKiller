@@ -202,6 +202,27 @@ Atarse a una malla concreta obligaría a tocar código cada vez que llegue un mo
 **Consecuencia:** sustituir un monstruo de placeholder por el definitivo es cambiar un
 archivo. Ni una línea de C#.
 
+### D-021 · El color del cuerpo viene con el modelo, no con los datos
+
+**Decidido.** `EnemyData` ya no lleva color. Cada modelo trae su paleta desde su hoja de
+concepto, y el aviso de ataque se pinta **encima** con un material traslúcido.
+**Por qué:** teñir el cuerpo entero de un color plano tiraba a la basura la paleta del
+modelo. Y superponer en vez de sustituir deja que la silueta se siga leyendo mientras
+avisa, que es justo cuando más importa distinguir qué monstruo es.
+**Consecuencia:** los efectos que se pintan encima —aviso y destello de daño— necesitan
+un único dueño, porque comparten capa. Es `BodyEffects`, con prioridad explícita: el
+destello manda sobre el aviso.
+
+### D-022 · Los niveles se guionizan con disparadores y respondedores
+
+**Decidido.** Un `TriggerZone` detecta al jugador y llama a `Activate()` sobre una lista
+de `LevelResponder`. El disparador no sabe qué va a pasar; cada respondedor hace lo suyo.
+**Por qué:** permite montar emboscadas, rejas y trampas **desde el editor, sin escribir
+código**, que es lo que hace falta para que el desarrollador diseñe niveles de verdad.
+Añadir un tipo de suceso es heredar de `LevelResponder`; no toca nada existente.
+**Lo mismo vale para lo rompible:** un `Breakable` tiene su propia lista de objetivos, así
+que «romper el altar abre la reja» se configura arrastrando nodos.
+
 ---
 
 ## Pendientes de decidir

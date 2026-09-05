@@ -26,6 +26,13 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/SummaryScreen.tscn" id="24_summary"]
 [ext_resource type="Script" path="res://scripts/meta/Loadout.cs" id="30_loadout"]
 [ext_resource type="Script" path="res://scripts/meta/CampaignFlow.cs" id="31_flow"]
+[ext_resource type="PackedScene" path="res://scenes/kit/Barrel.tscn" id="40_barrel"]
+[ext_resource type="PackedScene" path="res://scenes/kit/Altar.tscn" id="41_altar"]
+[ext_resource type="PackedScene" path="res://scenes/kit/Brazier.tscn" id="42_brazier"]
+[ext_resource type="PackedScene" path="res://scenes/kit/Door.tscn" id="43_door"]
+[ext_resource type="PackedScene" path="res://scenes/kit/TriggerZone.tscn" id="44_trigger"]
+[ext_resource type="PackedScene" path="res://scenes/kit/EnemySpawner.tscn" id="45_spawner"]
+[ext_resource type="Script" path="res://scripts/missions/DestroyObjective.cs" id="46_destroy"]
 [ext_resource type="StandardMaterial3D" path="res://resources/stone_floor.tres" id="26_floor"]
 [ext_resource type="StandardMaterial3D" path="res://resources/stone_wall.tres" id="27_wall"]
 [ext_resource type="StandardMaterial3D" path="res://resources/outer_ground.tres" id="28_ground"]
@@ -146,7 +153,7 @@ size = Vector3(3, 3, 3)
 [node name="Player" type="CharacterBody3D" parent="." groups=["player"] node_paths=PackedStringArray("Health", "Weapons")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
 collision_layer = 2
-collision_mask = 5
+collision_mask = 133
 script = ExtResource("1_player")
 Health = NodePath("HealthComponent")
 Weapons = NodePath("WeaponHolder")
@@ -171,7 +178,7 @@ FlashMaterial = ExtResource("6_flashmat")
 [node name="MeleeHitbox" type="Area3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 collision_layer = 16
-collision_mask = 4
+collision_mask = 132
 script = ExtResource("4_hitbox")
 Damage = 25
 IgnoresArmor = false
@@ -291,6 +298,11 @@ Title = "El nido del bosque"
 script = ExtResource("20_purge")
 Description = "Arrasar el nido"
 
+[node name="BreakAltar" type="Node" parent="Mission"]
+script = ExtResource("46_destroy")
+Description = "Destruir el altar profanado"
+OnlyNamed = "Altar"
+
 [node name="FindKey" type="Node" parent="Mission"]
 script = ExtResource("21_collect")
 Description = "Recuperar la llave del santuario"
@@ -310,3 +322,35 @@ Weapons = NodePath("../Player/WeaponHolder")
 [node name="CampaignFlow" type="Node" parent="."]
 script = ExtResource("31_flow")
 ShopScene = "res://scenes/ui/Shop.tscn"
+
+[node name="Altar" parent="." instance=ExtResource("41_altar") node_paths=PackedStringArray("Targets")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6)
+Targets = [NodePath("../NorthGate")]
+
+[node name="NorthGate" parent="." instance=ExtResource("43_door")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -11)
+
+[node name="BarrelA" parent="." instance=ExtResource("40_barrel")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4, 0, 8)
+
+[node name="BarrelB" parent="." instance=ExtResource("40_barrel")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0, 9.1)
+
+[node name="BarrelC" parent="." instance=ExtResource("40_barrel")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.2, 0, -2)
+
+[node name="BrazierA" parent="." instance=ExtResource("42_brazier")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -6)
+
+[node name="BrazierB" parent="." instance=ExtResource("42_brazier")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, -6)
+
+[node name="AmbushSpawner" parent="." instance=ExtResource("45_spawner")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, -9)
+EnemyScene = ExtResource("15_wolf")
+PerPoint = 1
+
+[node name="AmbushTrigger" parent="." instance=ExtResource("44_trigger") node_paths=PackedStringArray("Targets")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+Targets = [NodePath("../AmbushSpawner")]
+Delay = 0.35

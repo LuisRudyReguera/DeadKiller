@@ -1,0 +1,47 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/level/Breakable.cs" id="1_break"]
+[ext_resource type="Script" path="res://scripts/components/HealthComponent.cs" id="2_health"]
+[ext_resource type="Script" path="res://scripts/components/BodyEffects.cs" id="3_effects"]
+[ext_resource type="StandardMaterial3D" path="res://resources/hit_flash_material.tres" id="4_flash"]
+[ext_resource type="PackedScene" path="res://scenes/pickups/ItemPickup.tscn" id="5_drop"]
+
+[sub_resource type="BoxShape3D" id="Shape"]
+size = Vector3(0.85, 0.6, 2.1)
+
+[sub_resource type="BoxMesh" id="Mesh"]
+size = Vector3(0.85, 0.6, 2.1)
+
+[sub_resource type="StandardMaterial3D" id="Mat"]
+albedo_color = Color(0.2, 0.16, 0.14, 1)
+roughness = 0.9
+
+[node name="Coffin" type="StaticBody3D" node_paths=PackedStringArray("Health", "Body", "Blocker")]
+collision_layer = 128
+collision_mask = 0
+script = ExtResource("1_break")
+Health = NodePath("HealthComponent")
+Body = NodePath("Model")
+Blocker = NodePath("CollisionShape3D")
+Drop = ExtResource("5_drop")
+DropAmount = 25
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+shape = SubResource("Shape")
+
+[node name="Model" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+material_override = SubResource("Mat")
+mesh = SubResource("Mesh")
+
+[node name="HealthComponent" type="Node" parent="."]
+script = ExtResource("2_health")
+MaxHealth = 60
+FlatArmor = 0
+
+[node name="BodyEffects" type="Node" parent="." node_paths=PackedStringArray("Body", "Health")]
+script = ExtResource("3_effects")
+Body = NodePath("../Model")
+Health = NodePath("../HealthComponent")
+FlashMaterial = ExtResource("4_flash")

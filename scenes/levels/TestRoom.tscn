@@ -88,7 +88,7 @@ size = Vector3(0.5, 3, 21)
 
 [node name="Player" type="CharacterBody3D" parent="." unique_id=1952670564 groups=["player"] node_paths=PackedStringArray("Health", "Weapons")]
 collision_layer = 2
-collision_mask = 5
+collision_mask = 133
 script = ExtResource("1_oqbmf")
 Health = NodePath("HealthComponent")
 Weapons = NodePath("WeaponHolder")
@@ -119,7 +119,7 @@ FlashMaterial = ExtResource("10_flashmat")
 [node name="MeleeHitbox" type="Area3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 collision_layer = 16
-collision_mask = 4
+collision_mask = 132
 script = ExtResource("5_hitbox")
 Damage = 25
 IgnoresArmor = false

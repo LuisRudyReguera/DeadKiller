@@ -22,6 +22,8 @@
 /scripts/tools       utilidades de desarrollo, no forman parte del juego
 /scripts/meta        perfil guardado, mejoras y flujo de campaña
 /tools/blender       scripts de Blender, se ejecutan a mano
+/scripts/level       piezas de construcción de niveles y sucesos
+/scenes/kit          escenas que se arrastran a un nivel desde el editor
 /models      modelos .glb
 /audio       sonidos y música
 /materials   materiales y shaders
@@ -99,7 +101,12 @@ Configurar en `Project Settings → Layers → 3D Physics`. Mantener esta lista 
 | 5 | `EnemyHitbox` | Áreas que hacen daño a los enemigos |
 | 6 | `Projectile` | Flechas, virotes, balas |
 | 7 | `Pickup` | Armas, munición, oro del suelo |
-| 8 | `Interactable` | Puertas, palancas, altares |
+| 8 | `Interactable` | Puertas, palancas, altares, barriles y todo lo rompible |
+
+**Máscaras que hay que recordar:** las armas del jugador alcanzan `Enemy` **y**
+`Interactable` (máscara 132), porque si no un barril sería indestructible. Los
+proyectiles añaden `World` para morir contra las paredes (133). El jugador choca contra
+`World`, `Enemy` e `Interactable` (133).
 
 ## Acciones de input
 

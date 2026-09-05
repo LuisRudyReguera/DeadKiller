@@ -1,0 +1,31 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/level/Door.cs" id="1_door"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_block"]
+size = Vector3(4, 3, 0.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_leaf"]
+size = Vector3(4, 3, 0.4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_door"]
+albedo_color = Color(0.26, 0.19, 0.13, 1)
+roughness = 0.85
+
+[node name="Door" type="StaticBody3D" node_paths=PackedStringArray("Blocker", "Leaf")]
+collision_layer = 1
+collision_mask = 0
+script = ExtResource("1_door")
+Blocker = NodePath("CollisionShape3D")
+Leaf = NodePath("Leaf")
+DropDistance = 3.2
+OpenSeconds = 0.9
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("BoxShape3D_block")
+
+[node name="Leaf" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+material_override = SubResource("StandardMaterial3D_door")
+mesh = SubResource("BoxMesh_leaf")

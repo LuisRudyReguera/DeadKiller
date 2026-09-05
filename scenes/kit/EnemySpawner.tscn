@@ -1,0 +1,15 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/level/EnemySpawner.cs" id="1_spawner"]
+
+[node name="EnemySpawner" type="Node3D"]
+script = ExtResource("1_spawner")
+PerPoint = 1
+Spread = 1.2
+OnStart = false
+Once = true
+
+[node name="PointA" type="Marker3D" parent="."]
+
+[node name="PointB" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 0)

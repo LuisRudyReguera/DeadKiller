@@ -223,6 +223,30 @@ Añadir un tipo de suceso es heredar de `LevelResponder`; no toca nada existente
 **Lo mismo vale para lo rompible:** un `Breakable` tiene su propia lista de objetivos, así
 que «romper el altar abre la reja» se configura arrastrando nodos.
 
+### D-023 · El vampiro es un jornalero, no un noble
+
+**Decidido.** La hoja de concepto lo dibuja como un labrador encorvado con tirantes y
+pantalones remendados, no como el «gothic vampire, tattered black noble coat» que decía
+la sección de monstruos.
+**Por qué se acepta el cambio:** la joroba domina la silueta desde arriba mucho mejor que
+un abrigo largo, y la camisa clara lo identifica al instante entre un licántropo pardo y
+un demonio oscuro. La legibilidad cenital manda sobre la descripción original.
+**Consecuencia:** el prompt de generación de `ASSETS.md` para el vampiro quedó obsoleto y
+habría que reescribirlo cuando se genere el modelo definitivo.
+
+### D-024 · Los conceptos de ciencia ficción se aparcan, no se descartan
+
+**Decidido.** El Alien Grunt y el Poseído se guardan en el aparcadero de `ROADMAP.md`
+como material de una segunda campaña, con sus hojas en `docs/references/` y su brief en
+`ASSETS.md`. **No se implementan ahora.**
+**Por qué:** no encajan en la ambientación gótico-medieval que fija `DESIGN.md`, y meter
+un alien biomecánico en una cripta rompería lo único que da coherencia al bestiario. Pero
+son diseños buenos y perderlos sería tonto.
+**Riesgo anotado:** sus hojas llevan la marca de Sigma Team. `DESIGN.md` permite tomar la
+estructura de género de Alien Shooter y nada más, así que esa marca no puede viajar a
+ningún asset.
+**Cuando toque:** añadirlos es un `.tres` y una escena, sin tocar código (D-013).
+
 ---
 
 ## Pendientes de decidir

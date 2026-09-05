@@ -2,6 +2,27 @@
 
 > Ábrelo cuando importes modelos, sonidos o placeholders.
 
+## Hojas de concepto
+
+Las referencias visuales del proyecto están en `docs/references/`. Son la fuente de la
+que salen las proporciones, la postura y la paleta de cada personaje.
+
+| Hoja | Estado |
+|---|---|
+| `cazador_gotico.png` | **En uso.** Sombrero de ala ancha, gabán de cuero, ballesta a la espalda, farol al costado. 1,80 m. Trae paleta de 16 colores y panel de legibilidad cenital |
+| `licantropo.jpg` | **En uso.** Encorvado, digitígrado, cresta rojiza por el lomo, cola larga |
+| `vampiro_labrador.png` | **En uso.** Jornalero encorvado con tirantes, no el noble que describía la sección de monstruos. Trae panel de legibilidad cenital |
+| `alien_grunt.jpg` | **Aparcada** para una segunda campaña. Ver `ROADMAP.md` |
+| `poseido_tentaculos.jpg` | **Aparcada** para una segunda campaña. Ver `ROADMAP.md` |
+
+**Los códigos hexadecimales de las dos hojas aparcadas no son fiables**: varias entradas
+de sus listas están mal formadas o repetidas. Si se usan, hay que sacar los colores
+muestreando la imagen, no copiando la lista.
+
+**Lo que hay que respetar al sustituir un placeholder** por el modelo definitivo: la
+anchura de hombros, la altura y la huella en el suelo. Es lo único que se lee desde la
+cámara cenital y lo que hace que los arquetipos se distingan de un vistazo.
+
 ## Placeholders generados por código
 
 Las siluetas provisionales del cazador y de los tres monstruos salen de
@@ -117,6 +138,22 @@ pale gaunt skin, tattered black noble coat, long claws, sunken red eyes, [coleti
 lesser demon, full body, T-pose, symmetrical, game ready character,
 cracked charred skin with glowing embers between the cracks, curved horns,
 heavy armored shoulders, hulking build, [coletilla]
+```
+
+### Segunda campaña (aparcados, no generar todavía)
+
+Estos dos no van en la campaña gótico-medieval. Están aquí para que el brief exista el
+día que se abra la segunda. Ver el aparcadero de `ROADMAP.md`.
+
+```
+biomechanical alien grunt, full body, T-pose, symmetrical, game ready character,
+teal biometal carapace over chitinous exoskeleton, heavy armored shoulders,
+large curved bone claws, elongated fanged head, tail, [coletilla]
+```
+```
+possessed soldier, full body, T-pose, symmetrical, game ready character,
+torn military uniform, corpse grey skin, glowing orange eyes,
+one arm mutated into a bundle of tentacle claws with glowing cracks, [coletilla]
 ```
 
 ### Entorno

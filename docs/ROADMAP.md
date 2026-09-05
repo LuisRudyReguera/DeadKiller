@@ -99,4 +99,26 @@ Modelos finales, audio, efectos, menús. Alcance abierto; se define al llegar.
 Aparcadero de ideas. **Nada de aquí se implementa antes de tiempo.** Cuando surja una
 idea nueva fuera del hito activo, va a esta lista.
 
-- (vacío)
+### Segunda campaña: la brecha
+
+Dos arquetipos de ciencia ficción ya diseñados y **deliberadamente sin implementar**.
+No encajan en la ambientación gótico-medieval de esta campaña, así que se guardan para
+una segunda que cambie de escenario.
+
+Sus hojas de concepto están en `docs/references/`, y el brief de arte en `ASSETS.md`.
+
+- **Alien Grunt** (`alien_grunt.jpg`) — bicho biomecánico, caparazón de biometal verde
+  azulado y exoesqueleto quitinoso. Hombros acorazados enormes, garras curvas de color
+  hueso y cola. Más alto y mucho más ancho que un humano, unos 2,2 m. Ocuparía el hueco
+  del demonio: lento de acercarse, devastador de cerca.
+- **Poseído** (`poseido_tentaculos.jpg`) — soldado humano infectado, con un brazo
+  convertido en un manojo de tentáculos con grietas encendidas. Altura humana. Ocuparía
+  el hueco del licántropo: rápido y numeroso, pero con un ataque de alcance corto.
+
+**Lo que ya está listo para cuando toque:** añadir cualquiera de los dos es un `.tres` de
+`EnemyData` y una escena, sin tocar una línea de C# (D-013). El trabajo pendiente es solo
+el modelo.
+
+**Cuidado al usarlas:** las dos hojas llevan impresa la marca y el logo de Sigma Team, los
+autores de Alien Shooter. `DESIGN.md` dice que de ese juego se toma la estructura de
+género y nada más. Esa marca no debe viajar a ningún asset del juego.

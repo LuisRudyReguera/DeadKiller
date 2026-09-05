@@ -59,6 +59,9 @@ public partial class WeaponHolder : Node
 
     public bool IsReloading => _reloadLeft > 0.0f;
 
+    // Multiplicador del tiempo de recarga. Lo baja la mejora de la tienda; 1 = sin mejora.
+    public float ReloadScale { get; set; } = 1.0f;
+
     // Puntería de la misión. Un ataque cuerpo a cuerpo cuenta como "acertado" si tocó a
     // alguien; uno a distancia, si su proyectil llegó a alcanzar a alguien.
     public int AttacksMade { get; private set; }
@@ -317,10 +320,10 @@ public partial class WeaponHolder : Node
             return;
         }
 
-        _reloadLeft = Current.ReloadTime;
+        _reloadLeft = Current.ReloadTime * ReloadScale;
         Play(Current.ReloadSound);
 
-        EmitSignal(SignalName.ReloadStarted, Current.ReloadTime);
+        EmitSignal(SignalName.ReloadStarted, _reloadLeft);
 
         // Una recarga instantánea se resuelve ya, sin esperar al siguiente fotograma.
         if (_reloadLeft <= 0.0f)

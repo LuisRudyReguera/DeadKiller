@@ -59,11 +59,10 @@ public partial class SummaryScreen : CanvasLayer
             HintLabel.Visible = true;
         }
 
-        if (Input.IsActionJustPressed("interact") || Input.IsActionJustPressed("attack_primary"))
-        {
-            GetTree().CallDeferred(SceneTree.MethodName.ReloadCurrentScene);
-        }
     }
+
+    // Quién decide a dónde se va tras el resumen es CampaignFlow. Esta pantalla solo
+    // enseña las cifras: si además navegara, habría dos sitios leyendo la misma tecla.
 
     private void OnMissionEnded(bool won)
     {

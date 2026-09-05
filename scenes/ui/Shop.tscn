@@ -1,0 +1,98 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/ShopScreen.cs" id="1_shop"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
+bg_color = Color(0.07, 0.06, 0.08, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 40.0
+content_margin_top = 32.0
+content_margin_right = 40.0
+content_margin_bottom = 32.0
+bg_color = Color(0.11, 0.1, 0.13, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.45, 0.38, 0.26, 1)
+
+[node name="Shop" type="Control" node_paths=PackedStringArray("GoldLabel", "ProgressLabel", "HealthButton", "ReloadButton", "AmmoButton", "NextButton")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_shop")
+GoldLabel = NodePath("Background/Center/Panel/Box/Gold")
+ProgressLabel = NodePath("Background/Center/Panel/Box/Progress")
+HealthButton = NodePath("Background/Center/Panel/Box/Health")
+ReloadButton = NodePath("Background/Center/Panel/Box/Reload")
+AmmoButton = NodePath("Background/Center/Panel/Box/Ammo")
+NextButton = NodePath("Background/Center/Panel/Box/Next")
+
+[node name="Background" type="PanelContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_bg")
+
+[node name="Center" type="CenterContainer" parent="Background"]
+layout_mode = 2
+
+[node name="Panel" type="PanelContainer" parent="Background/Center"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="Box" type="VBoxContainer" parent="Background/Center/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="Background/Center/Panel/Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.97, 0.9, 0.7, 1)
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+text = "La tienda del cazador"
+
+[node name="Gold" type="Label" parent="Background/Center/Panel/Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.4, 1)
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 1
+text = "Oro   0"
+
+[node name="Progress" type="Label" parent="Background/Center/Panel/Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.63, 0.6, 1)
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 1
+text = "Misiones completadas   0"
+
+[node name="Separator" type="HSeparator" parent="Background/Center/Panel/Box"]
+layout_mode = 2
+
+[node name="Health" type="Button" parent="Background/Center/Panel/Box"]
+custom_minimum_size = Vector2(420, 58)
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "Vida"
+
+[node name="Reload" type="Button" parent="Background/Center/Panel/Box"]
+custom_minimum_size = Vector2(420, 58)
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "Recarga"
+
+[node name="Ammo" type="Button" parent="Background/Center/Panel/Box"]
+custom_minimum_size = Vector2(420, 58)
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "Municion"
+
+[node name="Separator2" type="HSeparator" parent="Background/Center/Panel/Box"]
+layout_mode = 2
+
+[node name="Next" type="Button" parent="Background/Center/Panel/Box"]
+custom_minimum_size = Vector2(420, 52)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Siguiente misión"

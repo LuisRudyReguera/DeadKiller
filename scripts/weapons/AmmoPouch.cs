@@ -74,6 +74,21 @@ public partial class AmmoPouch : Node
         return taken;
     }
 
+    /// <summary>
+    /// Sube el tope de un tipo de munición. Lo usan las mejoras compradas en la tienda;
+    /// no rellena la reserva, solo permite llevar más.
+    /// </summary>
+    public void RaiseCapacity(AmmoKind kind, int extra)
+    {
+        if (kind == AmmoKind.None || extra <= 0)
+        {
+            return;
+        }
+
+        _maximum[kind] = Maximum(kind) + extra;
+        EmitSignal(SignalName.AmmoChanged, (int)kind, Available(kind), Maximum(kind));
+    }
+
     public void Add(AmmoKind kind, int amount)
     {
         if (kind == AmmoKind.None || amount <= 0)

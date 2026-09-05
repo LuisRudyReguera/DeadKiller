@@ -173,6 +173,25 @@ no encuentra al que se registra después. Pasó de verdad: la salida del nivel n
 la misión solo por estar más arriba en la escena. Todos los `_EnterTree` ocurren antes que
 cualquier `_Ready`, así que el orden dentro de la escena deja de importar.
 
+### D-018 · El guardado es JSON plano, no un `Resource`
+
+**Decidido.** El perfil (`GameProfile`) es un objeto de C# corriente que se serializa a
+`user://profile.json`. No es un `Node` ni un `Resource`.
+**Por qué:** el formato del guardado no debe depender de cómo esté hecha una escena hoy.
+Un `.tres` guardado arrastra rutas y tipos; si mañana se renombra una clase, las partidas
+guardadas dejan de cargar. El JSON solo tiene números con nombre.
+**Además:** un guardado corrupto no impide jugar — se avisa y se empieza de cero.
+**Se escribe en dos sitios y solo dos:** al comprar en la tienda y al cerrar una misión
+ganada. Nunca dentro del nivel (D-005).
+
+### D-019 · Las mejoras se aplican en un solo sitio, `Loadout`
+
+**Decidido.** Un nodo `Loadout` en cada misión lee el perfil y lo vuelca sobre la vida, la
+bolsa de munición y el soporte de armas del jugador.
+**Por qué:** es la única frontera entre lo guardado y el juego. El `PlayerController`, las
+armas y los enemigos siguen sin saber que existe un perfil, y una misión de prueba sin
+`Loadout` se juega con los valores base.
+
 ---
 
 ## Pendientes de decidir

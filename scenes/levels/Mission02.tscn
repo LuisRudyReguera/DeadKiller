@@ -85,7 +85,7 @@ emission = Color(0.3, 0.95, 0.45, 1)
 emission_energy_multiplier = 1.8
 albedo_color = Color(0.3, 0.85, 0.45, 1)
 
-[node name="Mission01" type="Node3D"]
+[node name="Mission02" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_main")
@@ -239,16 +239,22 @@ transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49
 fov = 50.0
 
 [node name="Werewolf" parent="." instance=ExtResource("15_wolf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, 3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0, -8)
+
+[node name="Werewolf2" parent="." instance=ExtResource("15_wolf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0, -9)
 
 [node name="Vampire" parent="." instance=ExtResource("16_vamp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, -3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 4)
+
+[node name="Vampire2" parent="." instance=ExtResource("16_vamp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, 5)
 
 [node name="Demon" parent="." instance=ExtResource("17_demon")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -11)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -13)
 
 [node name="KeyPickup" parent="." instance=ExtResource("18_item")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.5, 0, -12.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0, -13)
 Kind = 1
 Amount = 1
 
@@ -285,15 +291,15 @@ mesh = SubResource("BoxMesh_exit")
 
 [node name="Mission" type="Node" parent="."]
 script = ExtResource("19_mission")
-Title = "Limpiar la cripta"
+Title = "El nido del bosque"
 
 [node name="Purge" type="Node" parent="Mission"]
 script = ExtResource("20_purge")
-Description = "Acabar con todo lo que se mueva"
+Description = "Arrasar el nido"
 
 [node name="FindKey" type="Node" parent="Mission"]
 script = ExtResource("21_collect")
-Description = "Encontrar la llave del portón"
+Description = "Recuperar la llave del santuario"
 Kind = 1
 Required = 1
 

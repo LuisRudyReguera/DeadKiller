@@ -10,14 +10,14 @@ cierre. Nada de "ya lo arreglo luego".
 
 ## Estado actual
 
-**Hito activo:** 4 — Misión jugable
-**Hecho:** hitos 0 a 3 cerrados. El hito 4 está **implementado y verificado con ventana**:
-`scenes/levels/Mission01.tscn` es ahora la escena principal, con dos objetivos, HUD, salida
-que solo se abre al cumplirlos y pantalla de resumen con bajas, puntería, oro y tiempo.
-`TestRoom.tscn` se conserva como banco de pruebas rápido.
-**Siguiente tarea:** jugarla entera. Falta comprobar si la misión se puede completar sin
-morir, si 30×30 m con tres monstruos es el tamaño correcto, y si la munición de partida
-llega.
+**Hito activo:** 5 — Metajuego
+**Hecho:** hitos 0 a 4 cerrados. El hito 5 está **implementado y verificado**: la campaña
+arranca en la tienda, encadena dos misiones, y el perfil sobrevive a cerrar el proceso —
+comprobado ejecutando el juego dos veces seguidas y viendo que recordaba oro y mejoras.
+La escena principal es ahora `scenes/ui/Shop.tscn`.
+**Siguiente tarea:** jugar la campaña entera de una sentada. Falta lo que solo se ve
+jugando: si el oro de una misión da para una mejora que se note, si la segunda misión con
+cinco monstruos es abarcable, y si apetece volver a jugar.
 
 **Bloqueos:** ninguno. Nota: al **cerrar** el juego salen dos líneas sobre instancias
 sin liberar. Está investigado y es del servidor de audio de Godot, no nuestro (D-015).
@@ -83,10 +83,10 @@ Cerrado cuando:
 ## Hito 5 — Metajuego
 
 Cerrado cuando:
-- [ ] Se encadenan dos misiones seguidas
-- [ ] Entre ellas se gasta oro en la tienda y el efecto se nota al jugar
-- [ ] El progreso sobrevive a cerrar y reabrir el juego
-- [ ] Guardado **solo entre misiones**, nunca dentro del nivel
+- [x] Se encadenan dos misiones seguidas
+- [x] Entre ellas se gasta oro en la tienda y el efecto se nota al jugar
+- [x] El progreso sobrevive a cerrar y reabrir el juego
+- [x] Guardado **solo entre misiones**, nunca dentro del nivel
 
 ## Hito 6 — Arte y pulido
 

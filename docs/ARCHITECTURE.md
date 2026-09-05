@@ -20,6 +20,7 @@
 /scripts/missions    objetivos, recogibles y control de misión
 /scripts/ui          HUD y pantallas
 /scripts/tools       utilidades de desarrollo, no forman parte del juego
+/scripts/meta        perfil guardado, mejoras y flujo de campaña
 /models      modelos .glb
 /audio       sonidos y música
 /materials   materiales y shaders

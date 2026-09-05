@@ -84,6 +84,24 @@ y un demonio en 8. Al demonio conviene dispararle. Esa es la intención.
 
 Las flechas se pueden recuperar del suelo tras dispararlas (~50% de recuperación).
 
+## Tienda
+
+Precios y efectos de las mejoras del cazador. Tres niveles cada una; el precio sube con
+el nivel para que no se compren todas de golpe. Provisionales.
+
+| Mejora | Efecto por nivel | Precios (nivel 1 / 2 / 3) |
+|---|---|---|
+| Vida | +25 de vida máxima | 40 / 70 / 110 |
+| Recarga | −12 % de tiempo de recarga | 50 / 90 / 140 |
+| Munición | +20 flechas, +8 virotes, +3 pólvora de tope | 30 / 60 / 100 |
+
+La recarga se aplica como **multiplicador**, no como resta: así la ballesta de 2,5 s y el
+arco de 0,8 s mejoran en la misma proporción y ninguna puede quedar en negativo. El
+descuento está topado al 60 %.
+
+**De dónde salen:** con el oro de los tres monstruos de la primera misión (40-70 de oro)
+se compra una mejora barata, no dos. Esa es la intención.
+
 ## Densidad y ritmo
 
 | | Valor |

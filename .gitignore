@@ -22,3 +22,6 @@ obj/
 *.user
 *.userprefs
 *.suo
+
+# Obsidian (si abres el repo como boveda, su config es local)
+.obsidian/

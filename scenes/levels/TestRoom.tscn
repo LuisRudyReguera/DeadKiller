@@ -8,6 +8,9 @@
 [ext_resource type="PackedScene" path="res://scenes/enemies/werewolf/Werewolf.tscn" id="6_wolf"]
 [ext_resource type="AudioStream" path="res://audio/sword_swing.wav" id="7_swing"]
 [ext_resource type="AudioStream" path="res://audio/hit_impact.wav" id="8_impact"]
+[ext_resource type="Script" path="res://scripts/components/HitFlashComponent.cs" id="9_flash"]
+[ext_resource type="StandardMaterial3D" path="res://resources/hit_flash_material.tres" id="10_flashmat"]
+[ext_resource type="StandardMaterial3D" path="res://resources/sword_arc_material.tres" id="11_arcmat"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_x60sr"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -35,8 +38,12 @@ size = Vector3(0.15, 0.15, 0.6)
 [sub_resource type="SphereShape3D" id="SphereShape3D_sword"]
 radius = 2.0
 
+[sub_resource type="PrismMesh" id="PrismMesh_arc"]
+size = Vector3(2.3, 2, 0.06)
+
 [node name="TestRoom" type="Node3D" unique_id=776816157]
 script = ExtResource("3_room")
+RestartDelay = 1.8
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=150964444]
 environment = SubResource("Environment_oqbmf")
@@ -70,7 +77,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.25, 1.5, 0)
 use_collision = true
 size = Vector3(0.5, 3, 21)
 
-[node name="Player" type="CharacterBody3D" parent="." unique_id=1952670564 groups=["player"] node_paths=PackedStringArray("Health", "Sword", "SwingSound", "HitSound")]
+[node name="Player" type="CharacterBody3D" parent="." unique_id=1952670564 groups=["player"] node_paths=PackedStringArray("Health", "Sword", "SwingSound", "HitSound", "SwingVisual")]
 collision_layer = 2
 collision_mask = 5
 script = ExtResource("1_oqbmf")
@@ -78,6 +85,7 @@ Health = NodePath("HealthComponent")
 Sword = NodePath("SwordHitbox")
 SwingSound = NodePath("SwingSound")
 HitSound = NodePath("HitSound")
+SwingVisual = NodePath("SwingArc")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player" unique_id=1704047257]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
@@ -117,6 +125,18 @@ unit_size = 25.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
 stream = ExtResource("8_impact")
 unit_size = 25.0
+
+[node name="SwingArc" type="MeshInstance3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 1, -1)
+visible = false
+material_override = ExtResource("11_arcmat")
+mesh = SubResource("PrismMesh_arc")
+
+[node name="HitFlash" type="Node" parent="Player" node_paths=PackedStringArray("Target", "Health")]
+script = ExtResource("9_flash")
+Target = NodePath("../MeshInstance3D")
+Health = NodePath("../HealthComponent")
+FlashMaterial = ExtResource("10_flashmat")
 
 [node name="Werewolf" parent="." instance=ExtResource("6_wolf")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -7)

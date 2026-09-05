@@ -28,12 +28,24 @@ public partial class PlayerController : CharacterBody3D
 
 	[Export] public AudioStreamPlayer3D HitSound { get; set; }
 
+	// Malla del arco del espadazo. Se muestra un instante al golpear: sin esto el
+	// ataque no se ve en pantalla y parece que no ha pasado nada.
+	[Export] public Node3D SwingVisual { get; set; }
+
+	[Export] public float SwingVisualDuration { get; set; } = 0.12f;
+
+	// Cuánto sobrevive un clic sin poder ejecutarse. Un clic rápido dura menos que un
+	// fotograma de física, así que sin este margen se perdería.
+	[Export] public float AttackBufferTime { get; set; } = 0.15f;
+
 	// Margen mínimo para no llamar a LookAt sobre la propia posición:
 	// Godot emite un error si el objetivo coincide con el origen.
 	private const float MinAimDistance = 0.01f;
 
 	private float _gravity;
 	private float _cooldown;
+	private float _bufferedAttack;
+	private float _swingVisible;
 	private bool _isDead;
 	private Camera3D _camera;
 
@@ -45,6 +57,24 @@ public partial class PlayerController : CharacterBody3D
 		if (Health != null)
 		{
 			Health.Died += OnDied;
+		}
+
+		if (SwingVisual != null)
+		{
+			SwingVisual.Visible = false;
+		}
+	}
+
+	/// <summary>
+	/// El clic se recoge como EVENTO, no sondeando. Sondear con Input.IsActionPressed
+	/// dentro de _PhysicsProcess pierde los clics más cortos que un fotograma, y el
+	/// espadazo desaparece sin dar ningún error.
+	/// </summary>
+	public override void _UnhandledInput(InputEvent @event)
+	{
+		if (!_isDead && @event.IsActionPressed("attack_primary"))
+		{
+			_bufferedAttack = AttackBufferTime;
 		}
 	}
 
@@ -138,18 +168,31 @@ public partial class PlayerController : CharacterBody3D
 	/// </summary>
 	private void UpdateAttack(double delta)
 	{
+		UpdateSwingVisual(delta);
+
 		if (_cooldown > 0.0f)
 		{
 			_cooldown -= (float)delta;
 		}
 
-		if (Sword == null || _cooldown > 0.0f || !Input.IsActionPressed("attack_primary"))
+		if (_bufferedAttack > 0.0f)
+		{
+			_bufferedAttack -= (float)delta;
+		}
+
+		// Mantener pulsado encadena espadazos; un clic suelto entra por el búfer.
+		bool wantsToAttack = _bufferedAttack > 0.0f || Input.IsActionPressed("attack_primary");
+
+		if (Sword == null || _cooldown > 0.0f || !wantsToAttack)
 		{
 			return;
 		}
 
+		_bufferedAttack = 0.0f;
 		_cooldown = AttackCooldown;
+
 		SwingSound?.Play();
+		ShowSwing();
 
 		if (Sword.Strike() > 0)
 		{
@@ -157,9 +200,41 @@ public partial class PlayerController : CharacterBody3D
 		}
 	}
 
+	private void ShowSwing()
+	{
+		if (SwingVisual == null)
+		{
+			return;
+		}
+
+		SwingVisual.Visible = true;
+		_swingVisible = SwingVisualDuration;
+	}
+
+	private void UpdateSwingVisual(double delta)
+	{
+		if (_swingVisible <= 0.0f)
+		{
+			return;
+		}
+
+		_swingVisible -= (float)delta;
+
+		if (_swingVisible <= 0.0f && SwingVisual != null)
+		{
+			SwingVisual.Visible = false;
+		}
+	}
+
 	private void OnDied()
 	{
 		_isDead = true;
+		_bufferedAttack = 0.0f;
+
+		if (SwingVisual != null)
+		{
+			SwingVisual.Visible = false;
+		}
 
 		// Diferido: la muerte llega desde un Strike() en pleno ciclo de física, y Godot
 		// bloquea tocar 'monitoring' dentro de una llamada de colisión.

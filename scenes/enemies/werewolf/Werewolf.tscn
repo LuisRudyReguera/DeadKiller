@@ -11,6 +11,8 @@
 [ext_resource type="Script" path="res://scripts/enemies/werewolf/WerewolfAttackState.cs" id="9_attack"]
 [ext_resource type="Script" path="res://scripts/enemies/werewolf/WerewolfRecoveryState.cs" id="10_recovery"]
 [ext_resource type="AudioStream" path="res://audio/werewolf_growl.wav" id="11_growl"]
+[ext_resource type="Script" path="res://scripts/components/HitFlashComponent.cs" id="12_flash"]
+[ext_resource type="StandardMaterial3D" path="res://resources/hit_flash_material.tres" id="13_flashmat"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_wolf"]
 radius = 0.4
@@ -74,6 +76,12 @@ ArcDegrees = 120.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="BiteHitbox"]
 shape = SubResource("SphereShape3D_bite")
+
+[node name="HitFlash" type="Node" parent="." node_paths=PackedStringArray("Target", "Health")]
+script = ExtResource("12_flash")
+Target = NodePath("../MeshInstance3D")
+Health = NodePath("../HealthComponent")
+FlashMaterial = ExtResource("13_flashmat")
 
 [node name="StateMachine" type="Node" parent="."]
 script = ExtResource("3_machine")

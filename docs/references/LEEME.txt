@@ -1,0 +1,2 @@
+# Las hojas de concepto son documentacion, no assets del juego.
+# El archivo .gdignore hace que Godot no las importe como texturas.

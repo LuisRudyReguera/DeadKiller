@@ -25,3 +25,6 @@ obj/
 
 # Obsidian (si abres el repo como boveda, su config es local)
 .obsidian/
+
+# Godot importa cualquier imagen del proyecto; las referencias no son assets
+docs/references/*.import

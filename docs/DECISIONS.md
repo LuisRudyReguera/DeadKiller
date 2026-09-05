@@ -71,6 +71,23 @@ C# se mantiene por preferencia del desarrollador.
 ataques telegrafiados que leer, y eso llega con el bestiario.
 **Revisable** en el hito 3, cuando coexistan los tres arquetipos.
 
+### D-009 · Los estados mueven a la entidad, no `_PhysicsProcess`
+
+**Decidido.** El `Werewolf` no tiene `_PhysicsProcess` propio: son los estados los que
+llaman a `MoveTowardsTarget`, `StandStill` o `Lunge`, y cada uno de ellos termina en
+`MoveAndSlide`.
+**Descartado:** que la entidad se moviera sola leyendo una variable que fijan los
+estados — en Godot los padres se procesan antes que los hijos, así que cada orden
+llegaría un fotograma tarde.
+
+### D-010 · Audio de placeholder generado por código
+
+**Decidido.** Los WAV del hito 1 los genera `tools/placeholder-audio/make_sounds.py` con
+la biblioteca estándar de Python. Son ondas sintetizadas, no grabaciones.
+**Por qué:** ASSETS.md exige que ninguna tarea de código se bloquee esperando arte, y
+el telegrafiado audible es criterio de cierre del hito 1.
+**Se sustituyen** por sonido real en el hito 6. El código no cambia: solo el `.wav`.
+
 ---
 
 ## Pendientes de decidir

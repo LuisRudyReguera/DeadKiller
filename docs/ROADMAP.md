@@ -11,11 +11,12 @@ cierre. Nada de "ya lo arreglo luego".
 ## Estado actual
 
 **Hito activo:** 1 — Primer combate
-**Hecho:** hito 0 completo. Proyecto .NET compilando, Input Map con las 12 acciones y las
-8 capas de física configuradas, y `scenes/levels/TestRoom.tscn` con sala cerrada, jugador
-que se mueve relativo a la cámara y apunta al cursor, y cámara cenital con suavizado.
-**Siguiente tarea:** `HealthComponent` y `StateMachine` reutilizables, y un licantropo que
-pase de `Inactivo` a `Alerta` y `Persecución`. El ataque telegrafiado va después.
+**Hecho:** hito 0 cerrado. El hito 1 está **implementado y verificado sin ventana**: el
+licántropo recorre `Inactivo → Alerta → Persecución → Preparar → Atacar → Recuperación`,
+muerde por 15, muere de dos espadazos y ambas muertes reinician la escena. Consola limpia.
+**Siguiente tarea:** probarlo a mano en Godot. Falta confirmar lo único que no se puede
+comprobar sin ver la pantalla: que el telegrafiado **se vea** (vira a ámbar y se enciende)
+y que el combate se sienta justo.
 
 **Bloqueos:** ninguno.
 

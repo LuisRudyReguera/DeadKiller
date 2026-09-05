@@ -13,6 +13,7 @@
 ```
 /scenes      escenas .tscn por dominio (player/, enemies/, weapons/, levels/, ui/)
 /scripts     código C#, misma estructura que /scenes
+/scripts/components  componentes reutilizables sin escena propia
 /resources   recursos .tres (WeaponData, EnemyData…)
 /models      modelos .glb
 /audio       sonidos y música

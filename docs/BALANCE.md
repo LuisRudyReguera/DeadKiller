@@ -29,6 +29,18 @@
 
 **Armadura plana:** se resta del daño recibido, con un mínimo de 1. La maza la ignora.
 
+### Licántropo — tiempos de la máquina de estados
+
+Provisionales, salidos de montar el hito 1. Se ajustan jugando.
+
+| | Valor | Por qué |
+|---|---|---|
+| Duración de `Alerta` | 0,6 s | Se gira y reacciona antes de lanzarse; hace legible que te ha visto |
+| Distancia a la que prepara el ataque | 2,5 m | Mayor que el alcance de 1,5 m, para que la embestida tenga recorrido |
+| Duración de la embestida | 0,25 s | A 11 m/s recorre unos 2,75 m: cubre el hueco y pasa de largo si fallas |
+| Duración de `Recuperación` | 0,6 s | La ventana en la que el jugador puede contraatacar sin que le muerdan |
+| Distancia a la que pierde al jugador | 16 m | Los 12 m de visión + 4 de histéresis, para que no parpadee en el borde |
+
 **Aviso previo:** segundos entre que el enemigo empieza a telegrafiar y el golpe conecta.
 Nunca puede ser 0. Es el margen que tiene el jugador para reaccionar y define si el juego
 es justo.
@@ -37,7 +49,7 @@ es justo.
 
 | | Daño | Cadencia / recarga | Munición | Notas |
 |---|---|---|---|---|
-| Espada corta | 25 | 0,5 s | — | Arco de 60° |
+| Espada corta | 25 | 0,5 s | — | Arco de 60°, alcance 2 m |
 | Maza | 45 | 1,1 s | — | Aturde 0,8 s; ignora armadura |
 | Arco corto | 30 | 0,8 s | Flechas | Proyectil a 25 m/s; recuperables |
 | Ballesta | 70 | 2,5 s de recarga | Virotes | Atraviesa un enemigo |

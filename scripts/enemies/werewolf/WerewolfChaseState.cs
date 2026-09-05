@@ -16,9 +16,19 @@ public partial class WerewolfChaseState : WerewolfState
             return;
         }
 
+        float distance = Agent.DistanceToTarget();
+
+        // Se comprueba antes de moverse: si ya está en distancia, no da un paso de más.
+        if (distance <= Agent.PrepareRange)
+        {
+            Agent.StandStill(delta);
+            RequestTransition(Prepare);
+            return;
+        }
+
         Agent.MoveTowardsTarget(delta);
 
-        if (Agent.DistanceToTarget() > Agent.LoseSightRange)
+        if (distance > Agent.LoseSightRange)
         {
             RequestTransition(Idle);
         }

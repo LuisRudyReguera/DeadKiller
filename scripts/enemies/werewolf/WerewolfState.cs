@@ -13,6 +13,9 @@ public partial class WerewolfState : State
     protected static readonly StringName Idle = "Idle";
     protected static readonly StringName Alert = "Alert";
     protected static readonly StringName Chase = "Chase";
+    protected static readonly StringName Prepare = "Prepare";
+    protected static readonly StringName Attack = "Attack";
+    protected static readonly StringName Recovery = "Recovery";
 
     protected Werewolf Agent { get; private set; }
 

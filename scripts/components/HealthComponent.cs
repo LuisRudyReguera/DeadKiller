@@ -33,6 +33,28 @@ public partial class HealthComponent : Node
     }
 
     /// <summary>
+    /// Busca el componente de vida entre los hijos directos de un nodo. Lo usan los
+    /// hitbox para no tener que conocer el tipo concreto de a quién golpean.
+    /// </summary>
+    public static HealthComponent FindIn(Node node)
+    {
+        if (node == null)
+        {
+            return null;
+        }
+
+        foreach (Node child in node.GetChildren())
+        {
+            if (child is HealthComponent health)
+            {
+                return health;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
     /// Aplica daño descontando la armadura. La maza es el caso de <paramref name="ignoresArmor"/>.
     /// </summary>
     public void TakeDamage(int amount, bool ignoresArmor = false)

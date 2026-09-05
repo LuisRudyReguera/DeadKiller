@@ -2,6 +2,12 @@
 
 [ext_resource type="Script" uid="uid://cfwf5hi1581gd" path="res://scripts/player/PlayerController.cs" id="1_oqbmf"]
 [ext_resource type="Script" uid="uid://b7thb778sdkk7" path="res://scripts/player/CameraRig.cs" id="2_arrdh"]
+[ext_resource type="Script" path="res://scripts/levels/TestRoom.cs" id="3_room"]
+[ext_resource type="Script" path="res://scripts/components/HealthComponent.cs" id="4_health"]
+[ext_resource type="Script" path="res://scripts/components/HitboxComponent.cs" id="5_hitbox"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/werewolf/Werewolf.tscn" id="6_wolf"]
+[ext_resource type="AudioStream" path="res://audio/sword_swing.wav" id="7_swing"]
+[ext_resource type="AudioStream" path="res://audio/hit_impact.wav" id="8_impact"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_x60sr"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -26,7 +32,11 @@ height = 1.8
 [sub_resource type="BoxMesh" id="BoxMesh_wvhbo"]
 size = Vector3(0.15, 0.15, 0.6)
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_sword"]
+radius = 2.0
+
 [node name="TestRoom" type="Node3D" unique_id=776816157]
+script = ExtResource("3_room")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=150964444]
 environment = SubResource("Environment_oqbmf")
@@ -60,10 +70,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.25, 1.5, 0)
 use_collision = true
 size = Vector3(0.5, 3, 21)
 
-[node name="Player" type="CharacterBody3D" parent="." unique_id=1952670564 groups=["player"]]
+[node name="Player" type="CharacterBody3D" parent="." unique_id=1952670564 groups=["player"] node_paths=PackedStringArray("Health", "Sword", "SwingSound", "HitSound")]
 collision_layer = 2
 collision_mask = 5
 script = ExtResource("1_oqbmf")
+Health = NodePath("HealthComponent")
+Sword = NodePath("SwordHitbox")
+SwingSound = NodePath("SwingSound")
+HitSound = NodePath("HitSound")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player" unique_id=1704047257]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
@@ -76,6 +90,36 @@ mesh = SubResource("CapsuleMesh_wvhbo")
 [node name="FacingMarker" type="MeshInstance3D" parent="Player" unique_id=2064552391]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -0.5)
 mesh = SubResource("BoxMesh_wvhbo")
+
+[node name="HealthComponent" type="Node" parent="Player"]
+script = ExtResource("4_health")
+MaxHealth = 100
+FlatArmor = 0
+
+[node name="SwordHitbox" type="Area3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+collision_layer = 16
+collision_mask = 4
+script = ExtResource("5_hitbox")
+Damage = 25
+IgnoresArmor = false
+ArcDegrees = 60.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player/SwordHitbox"]
+shape = SubResource("SphereShape3D_sword")
+
+[node name="SwingSound" type="AudioStreamPlayer3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+stream = ExtResource("7_swing")
+unit_size = 25.0
+
+[node name="HitSound" type="AudioStreamPlayer3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+stream = ExtResource("8_impact")
+unit_size = 25.0
+
+[node name="Werewolf" parent="." instance=ExtResource("6_wolf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -7)
 
 [node name="CameraRig" type="Node3D" parent="." unique_id=2096064119 node_paths=PackedStringArray("Target")]
 script = ExtResource("2_arrdh")

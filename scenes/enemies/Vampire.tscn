@@ -13,22 +13,17 @@
 [ext_resource type="Script" path="res://scripts/enemies/states/PrepareState.cs" id="11_prepare"]
 [ext_resource type="Script" path="res://scripts/enemies/states/AttackState.cs" id="12_attack"]
 [ext_resource type="Script" path="res://scripts/enemies/states/RecoveryState.cs" id="13_recovery"]
-[ext_resource type="Script" path="res://scripts/enemies/states/BlinkState.cs" id="14_blink"]
+[ext_resource type="PackedScene" path="res://models/vampire.glb" id="14_model"]
+[ext_resource type="Script" path="res://scripts/enemies/states/BlinkState.cs" id="15_blink"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
-radius = 0.38
-height = 1.9
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_body"]
-radius = 0.38
+radius = 0.36
 height = 1.9
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_body"]
 resource_local_to_scene = true
 albedo_color = Color(0.5, 0.5, 0.5, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_marker"]
-size = Vector3(0.14, 0.14, 0.6)
+roughness = 0.85
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_reach"]
 resource_local_to_scene = true
@@ -43,21 +38,15 @@ Health = NodePath("HealthComponent")
 States = NodePath("StateMachine")
 Attack = NodePath("AttackHitbox")
 AttackShape = NodePath("AttackHitbox/CollisionShape3D")
-Body = NodePath("MeshInstance3D")
+Body = NodePath("Model")
 Voice = NodePath("Voice")
+BodyMaterial = SubResource("StandardMaterial3D_body")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
 shape = SubResource("CapsuleShape3D_body")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
-material_override = SubResource("StandardMaterial3D_body")
-mesh = SubResource("CapsuleMesh_body")
-
-[node name="FacingMarker" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, -0.5)
-mesh = SubResource("BoxMesh_marker")
+[node name="Model" parent="." instance=ExtResource("14_model")]
 
 [node name="HealthComponent" type="Node" parent="."]
 script = ExtResource("3_health")
@@ -66,12 +55,12 @@ FlatArmor = 0
 
 [node name="HitFlash" type="Node" parent="." node_paths=PackedStringArray("Target", "Health")]
 script = ExtResource("6_flash")
-Target = NodePath("../MeshInstance3D")
+Target = NodePath("../Model")
 Health = NodePath("../HealthComponent")
 FlashMaterial = ExtResource("7_flashmat")
 
 [node name="Voice" type="AudioStreamPlayer3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
 unit_size = 25.0
 
 [node name="AttackHitbox" type="Area3D" parent="."]
@@ -109,5 +98,5 @@ script = ExtResource("12_attack")
 script = ExtResource("13_recovery")
 
 [node name="Blink" type="Node" parent="StateMachine"]
-script = ExtResource("14_blink")
+script = ExtResource("15_blink")
 Duration = 0.3

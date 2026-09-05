@@ -192,6 +192,16 @@ bolsa de munición y el soporte de armas del jugador.
 armas y los enemigos siguen sin saber que existe un perfil, y una misión de prueba sin
 `Loadout` se juega con los valores base.
 
+### D-020 · El cuerpo de una entidad es un nodo, no una malla
+
+**Decidido.** Todo lo que pinta o destella un personaje pasa por `Meshes.CollectFrom`,
+que recoge todas las mallas que cuelguen del nodo del cuerpo.
+**Por qué:** un placeholder es una cápsula suelta, pero un modelo importado de un `.glb`
+es una escena con varias mallas dentro y una raíz que **no** es un `MeshInstance3D`.
+Atarse a una malla concreta obligaría a tocar código cada vez que llegue un modelo nuevo.
+**Consecuencia:** sustituir un monstruo de placeholder por el definitivo es cambiar un
+archivo. Ni una línea de C#.
+
 ---
 
 ## Pendientes de decidir

@@ -2,6 +2,27 @@
 
 > Ábrelo cuando importes modelos, sonidos o placeholders.
 
+## Placeholders generados por código
+
+Las siluetas provisionales del cazador y de los tres monstruos salen de
+`tools/blender/make_placeholders.py`, que se ejecuta con Blender sin abrirlo:
+
+```
+"C:\Program Files\Blender Foundation\Blender 5.2lender.exe" --background ^
+    --python tools/blender/make_placeholders.py
+```
+
+Aplica las convenciones de más abajo por su cuenta: escala en metros, mirando a −Z,
+origen en los pies y todas las transformaciones aplicadas. Salen a `models/*.glb`.
+
+**Sustituirlas por modelos de verdad no toca código.** El cuerpo de una entidad puede ser
+una malla suelta o un `.glb` con varias dentro: `Meshes.CollectFrom` recorre lo que haya,
+y el color del arquetipo y el destello se aplican a todas. Basta con reemplazar el `.glb`.
+
+**Lo que estas siluetas ya fijan** y conviene respetar al sustituirlas: la anchura de
+hombros y la huella en el suelo de cada arquetipo. Es lo único que se lee desde la cámara
+cenital, y es lo que hace que se distingan de un vistazo.
+
 ## Regla principal
 
 **Ninguna tarea de código se bloquea esperando arte.** Durante los hitos 0-3 todo son

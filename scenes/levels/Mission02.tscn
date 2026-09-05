@@ -30,6 +30,8 @@
 [ext_resource type="StandardMaterial3D" path="res://resources/stone_wall.tres" id="27_wall"]
 [ext_resource type="StandardMaterial3D" path="res://resources/outer_ground.tres" id="28_ground"]
 [ext_resource type="StandardMaterial3D" path="res://resources/hunter_body.tres" id="29_hunter"]
+[ext_resource type="PackedScene" path="res://models/hunter.glb" id="32_huntermodel"]
+[ext_resource type="Script" path="res://scripts/components/BodyTint.cs" id="33_tint"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]
 sky_horizon_color = Color(0.42, 0.4, 0.46, 1)
@@ -154,23 +156,21 @@ Weapons = NodePath("WeaponHolder")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_player")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
-material_override = ExtResource("29_hunter")
-mesh = SubResource("CapsuleMesh_player")
-
-[node name="FacingMarker" type="MeshInstance3D" parent="Player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -0.5)
-mesh = SubResource("BoxMesh_marker")
+[node name="Model" parent="Player" instance=ExtResource("32_huntermodel")]
 
 [node name="HealthComponent" type="Node" parent="Player"]
 script = ExtResource("3_health")
 MaxHealth = 100
 FlatArmor = 0
 
+[node name="BodyTint" type="Node" parent="Player" node_paths=PackedStringArray("Body")]
+script = ExtResource("33_tint")
+Body = NodePath("../Model")
+Material = ExtResource("29_hunter")
+
 [node name="HitFlash" type="Node" parent="Player" node_paths=PackedStringArray("Target", "Health")]
 script = ExtResource("5_flash")
-Target = NodePath("../MeshInstance3D")
+Target = NodePath("../Model")
 Health = NodePath("../HealthComponent")
 FlashMaterial = ExtResource("6_flashmat")
 

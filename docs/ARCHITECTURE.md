@@ -21,6 +21,7 @@
 /scripts/ui          HUD y pantallas
 /scripts/tools       utilidades de desarrollo, no forman parte del juego
 /scripts/meta        perfil guardado, mejoras y flujo de campaña
+/tools/blender       scripts de Blender, se ejecutan a mano
 /models      modelos .glb
 /audio       sonidos y música
 /materials   materiales y shaders

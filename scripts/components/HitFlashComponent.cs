@@ -12,7 +12,9 @@ namespace DeadKillers.Components;
 [GlobalClass]
 public partial class HitFlashComponent : Node
 {
-    [Export] public MeshInstance3D Target { get; set; }
+    // Nodo del cuerpo. Puede ser una malla suelta o la raíz de un modelo importado
+    // con varias mallas dentro: se destellan todas.
+    [Export] public Node3D Target { get; set; }
 
     [Export] public HealthComponent Health { get; set; }
 
@@ -24,6 +26,7 @@ public partial class HitFlashComponent : Node
 
     private float _remaining;
     private int _lastKnownHealth = int.MaxValue;
+    private System.Collections.Generic.List<MeshInstance3D> _meshes;
 
     public override void _Ready()
     {
@@ -35,6 +38,7 @@ public partial class HitFlashComponent : Node
             return;
         }
 
+        _meshes = Meshes.CollectFrom(Target);
         Health.HealthChanged += OnHealthChanged;
     }
 
@@ -44,9 +48,9 @@ public partial class HitFlashComponent : Node
         // del cierre del motor.
         // IsInstanceValid y no solo != null: al destruirse la escena, el hermano puede
         // estar ya liberado y su envoltorio de C# sigue sin ser null.
-        if (IsInstanceValid(Target))
+        if (_meshes != null)
         {
-            Target.MaterialOverlay = null;
+            Meshes.SetOverlay(_meshes, null);
         }
 
         FlashMaterial = null;
@@ -60,7 +64,7 @@ public partial class HitFlashComponent : Node
             return;
         }
 
-        Target.MaterialOverlay = null;
+        Meshes.SetOverlay(_meshes, null);
         SetProcess(false);
     }
 
@@ -76,7 +80,7 @@ public partial class HitFlashComponent : Node
         }
 
         _remaining = Duration;
-        Target.MaterialOverlay = FlashMaterial;
+        Meshes.SetOverlay(_meshes, FlashMaterial);
         SetProcess(true);
     }
 }

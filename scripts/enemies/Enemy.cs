@@ -26,15 +26,23 @@ public partial class Enemy : CharacterBody3D
 
     [Export] public CollisionShape3D AttackShape { get; set; }
 
-    [Export] public MeshInstance3D Body { get; set; }
+    // Cuerpo visible. Puede ser una cápsula de placeholder o la raíz de un modelo
+    // importado: el color y el telegrafiado se aplican a todas sus mallas.
+    [Export] public Node3D Body { get; set; }
 
     [Export] public AudioStreamPlayer3D Voice { get; set; }
+
+    // Material del arquetipo. Marcado como local a la escena para que cada instancia
+    // lleve el suyo y pueda telegrafiar sin encender a los demas.
+    [Export] public Material BodyMaterial { get; set; }
 
     // Se deja vacío: se resuelve solo buscando al jugador por su grupo.
     [Export] public Node3D Target { get; set; }
 
     private const float MinLookDistance = 0.01f;
-    private const float TelegraphGlow = 1.6f;
+    // El aviso ocupa casi un tercio del ciclo del enemigo, así que un brillo fuerte
+    // deja de leerse como aviso y pasa a ser su aspecto normal. Basta con que se note.
+    private const float TelegraphGlow = 0.8f;
 
     private float _gravity;
     private Vector3 _lungeDirection = Vector3.Forward;
@@ -45,6 +53,7 @@ public partial class Enemy : CharacterBody3D
     private int _maxGold;
     private StandardMaterial3D _material;
     private Color _restColor;
+    private System.Collections.Generic.List<MeshInstance3D> _meshes;
 
     public bool HasTarget => Target != null && IsInstanceValid(Target);
 
@@ -107,11 +116,17 @@ public partial class Enemy : CharacterBody3D
 
         // El material está marcado como local a la escena, así que cada instancia tiene
         // el suyo y puede llevar su propio color sin pisar a los demás.
-        if (Body?.MaterialOverride is StandardMaterial3D material)
+        _meshes = Meshes.CollectFrom(Body);
+
+        if (BodyMaterial is StandardMaterial3D material)
         {
             _material = material;
             _material.AlbedoColor = Data.BodyColor;
             _restColor = Data.BodyColor;
+
+            // El modelo importado trae sus propios materiales; se sustituyen por el del
+            // arquetipo para que un solo .glb sirva a varios colores.
+            Meshes.SetOverride(_meshes, _material);
         }
     }
 
@@ -141,9 +156,11 @@ public partial class Enemy : CharacterBody3D
 
         // El material es local a la escena, así que cada instancia tiene el suyo: hay
         // que soltarlo explícitamente o se queda vivo al cerrar.
-        if (IsInstanceValid(Body))
+        if (_meshes != null)
         {
-            Body.MaterialOverlay = null;
+            Meshes.SetOverride(_meshes, null);
+            Meshes.SetOverlay(_meshes, null);
+            _meshes = null;
         }
     }
 

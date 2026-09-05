@@ -10,14 +10,14 @@ cierre. Nada de "ya lo arreglo luego".
 
 ## Estado actual
 
-**Hito activo:** 3 — Bestiario
-**Hecho:** hitos 0, 1 y 2 cerrados. El hito 3 está **implementado y verificado sin
-ventana**: los tres arquetipos coexisten en la sala, cada uno con sus números, su aviso
-sonoro y su forma de moverse. Ya no existe la clase `Werewolf`: hay un `Enemy` genérico
-guiado por `EnemyData` (D-013).
-**Siguiente tarea:** probarlo a mano. Falta lo que no se puede comprobar sin pantalla:
-si de verdad se juegan distinto los tres, si los tres avisos se distinguen de oído, y si
-pelear contra los tres a la vez es abarcable o un caos.
+**Hito activo:** 4 — Misión jugable
+**Hecho:** hitos 0 a 3 cerrados. El hito 4 está **implementado y verificado con ventana**:
+`scenes/levels/Mission01.tscn` es ahora la escena principal, con dos objetivos, HUD, salida
+que solo se abre al cumplirlos y pantalla de resumen con bajas, puntería, oro y tiempo.
+`TestRoom.tscn` se conserva como banco de pruebas rápido.
+**Siguiente tarea:** jugarla entera. Falta comprobar si la misión se puede completar sin
+morir, si 30×30 m con tres monstruos es el tamaño correcto, y si la munición de partida
+llega.
 
 **Bloqueos:** ninguno. Nota: al **cerrar** el juego salen dos líneas sobre instancias
 sin liberar. Está investigado y es del servidor de audio de Godot, no nuestro (D-015).
@@ -74,11 +74,11 @@ Cerrado cuando:
 ## Hito 4 — Misión jugable
 
 Cerrado cuando:
-- [ ] Una misión se completa de principio a fin
-- [ ] Los objetivos se rastrean y se muestran en el HUD
-- [ ] La salida se desbloquea al cumplirlos
-- [ ] Pantalla de resumen: bajas, precisión, oro, tiempo
-- [ ] Se puede perder y reintentar
+- [x] Una misión se completa de principio a fin
+- [x] Los objetivos se rastrean y se muestran en el HUD
+- [x] La salida se desbloquea al cumplirlos
+- [x] Pantalla de resumen: bajas, precisión, oro, tiempo
+- [x] Se puede perder y reintentar
 
 ## Hito 5 — Metajuego
 

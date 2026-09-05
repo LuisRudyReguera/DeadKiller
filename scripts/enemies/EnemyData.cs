@@ -89,4 +89,7 @@ public partial class EnemyData : Resource
     [Export] public int MinGold { get; set; } = 5;
 
     [Export] public int MaxGold { get; set; } = 10;
+
+    // Qué deja al morir. Si se deja vacío, no suelta nada.
+    [Export] public PackedScene DropScene { get; set; }
 }

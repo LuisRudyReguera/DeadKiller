@@ -59,6 +59,12 @@ public partial class WeaponHolder : Node
 
     public bool IsReloading => _reloadLeft > 0.0f;
 
+    // Puntería de la misión. Un ataque cuerpo a cuerpo cuenta como "acertado" si tocó a
+    // alguien; uno a distancia, si su proyectil llegó a alcanzar a alguien.
+    public int AttacksMade { get; private set; }
+
+    public int AttacksLanded { get; private set; }
+
     private float _cooldown;
     private float _reloadLeft;
     private float _swingLeft;
@@ -81,6 +87,15 @@ public partial class WeaponHolder : Node
     private void OnMeleeHit(Node3D target)
     {
         ImpactSound?.Play();
+    }
+
+    /// <summary>
+    /// Un proyectil puede atravesar a varios; la puntería cuenta el disparo, no las
+    /// víctimas, así que solo suma la primera vez.
+    /// </summary>
+    private void OnProjectileHit()
+    {
+        AttacksLanded++;
     }
 
     /// <summary>
@@ -201,11 +216,18 @@ public partial class WeaponHolder : Node
     private bool FireMelee()
     {
         _cooldown = Current.Cooldown;
+        AttacksMade++;
 
         Play(Current.FireSound);
         ShowSwing();
 
-        return MeleeHitbox != null && MeleeHitbox.Strike() > 0;
+        bool landed = MeleeHitbox != null && MeleeHitbox.Strike() > 0;
+        if (landed)
+        {
+            AttacksLanded++;
+        }
+
+        return landed;
     }
 
     private bool FireRanged()
@@ -233,6 +255,7 @@ public partial class WeaponHolder : Node
         }
 
         SpawnProjectile();
+        AttacksMade++;
 
         _cooldown = Current.Cooldown;
         Play(Current.FireSound);
@@ -259,6 +282,8 @@ public partial class WeaponHolder : Node
         projectile.MaxTargets = Current.MaxTargets;
         projectile.IgnoresArmor = Current.IgnoresArmor;
         projectile.MaxDistance = Current.Range;
+
+        projectile.TargetHit += OnProjectileHit;
 
         // Al nivel, no al jugador: si colgara del jugador se movería con él.
         Node parent = GetTree().CurrentScene ?? GetTree().Root;

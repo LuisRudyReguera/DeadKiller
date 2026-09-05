@@ -12,6 +12,10 @@ namespace DeadKillers.Weapons;
 [GlobalClass]
 public partial class Projectile : Area3D
 {
+    /// <summary>Ha alcanzado a alguien con vida. Lo usa quien lleve la puntería.</summary>
+    [Signal]
+    public delegate void TargetHitEventHandler();
+
     [Export] public float Speed { get; set; } = 25.0f;
 
     [Export] public int Damage { get; set; } = 30;
@@ -67,6 +71,13 @@ public partial class Projectile : Area3D
 
         health.TakeDamage(Damage, IgnoresArmor);
         _targetsHit++;
+
+        // Solo el primer impacto cuenta para la puntería: un virote que atraviesa a dos
+        // sigue siendo un disparo acertado, no dos.
+        if (_targetsHit == 1)
+        {
+            EmitSignal(SignalName.TargetHit);
+        }
 
         if (_targetsHit >= MaxTargets)
         {

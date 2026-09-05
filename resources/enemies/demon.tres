@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="EnemyData" format=3]
 
 [ext_resource type="Script" path="res://scripts/enemies/EnemyData.cs" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/pickups/ItemPickup.tscn" id="3_drop"]
 [ext_resource type="AudioStream" path="res://audio/demon_roar.wav" id="2_sound"]
 
 [resource]
@@ -29,3 +30,4 @@ TelegraphColor = Color(1, 0.25, 0.08, 1)
 WarningSound = ExtResource("2_sound")
 MinGold = 25
 MaxGold = 40
+DropScene = ExtResource("3_drop")

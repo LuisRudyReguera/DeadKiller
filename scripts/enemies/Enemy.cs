@@ -1,5 +1,6 @@
 using Godot;
 using DeadKillers.Components;
+using DeadKillers.Missions;
 
 namespace DeadKillers.Enemies;
 
@@ -37,6 +38,11 @@ public partial class Enemy : CharacterBody3D
 
     private float _gravity;
     private Vector3 _lungeDirection = Vector3.Forward;
+
+    // Copias de lo que hace falta al morir: para entonces Data ya puede estar suelto.
+    private PackedScene _drop;
+    private int _minGold;
+    private int _maxGold;
     private StandardMaterial3D _material;
     private Color _restColor;
 
@@ -94,6 +100,10 @@ public partial class Enemy : CharacterBody3D
         {
             Voice.Stream = Data.WarningSound;
         }
+
+        _drop = Data.DropScene;
+        _minGold = Data.MinGold;
+        _maxGold = Data.MaxGold;
 
         // El material está marcado como local a la escena, así que cada instancia tiene
         // el suyo y puede llevar su propio color sin pisar a los demás.
@@ -315,5 +325,32 @@ public partial class Enemy : CharacterBody3D
 
         Velocity = Vector3.Zero;
         SetPhysicsProcess(false);
+
+        // Diferido: la muerte llega en pleno ciclo de física, y añadir nodos al árbol
+        // desde dentro de una llamada de colisión no es seguro.
+        CallDeferred(MethodName.SpawnDrop);
+    }
+
+    /// <summary>Suelta el oro donde cayó. Lo recoge el jugador pasando por encima.</summary>
+    private void SpawnDrop()
+    {
+        if (_drop == null || !IsInsideTree())
+        {
+            return;
+        }
+
+        if (_drop.Instantiate() is not Node3D loot)
+        {
+            return;
+        }
+
+        if (loot is ItemPickup pickup)
+        {
+            pickup.Kind = ItemKind.Gold;
+            pickup.Amount = (int)GD.RandRange(_minGold, _maxGold);
+        }
+
+        GetParent().AddChild(loot);
+        loot.GlobalPosition = GlobalPosition;
     }
 }

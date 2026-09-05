@@ -153,6 +153,26 @@ vía es reportarlo aguas arriba, no contorsionar nuestro código.
 
 **No volver a investigarlo** sin una razón nueva. Costó bastante llegar aquí.
 
+### D-016 · La misión es el punto de encuentro, y los objetivos son nodos
+
+**Decidido.** `Mission` es un nodo que lleva los objetivos como hijos, las cifras del
+resumen y el estado de la salida. Una moneda del suelo no sabe qué es un objetivo: se lo
+cuenta a la misión y ella decide si eso cumple algo.
+**Por qué:** deja añadir tipos de objetivo (`PurgeObjective`, `CollectObjective`, y los de
+escolta o supervivencia que vengan) sin tocar nada de lo existente, igual que las armas y
+los enemigos.
+**Descartado:** que cada objetivo buscara por su cuenta lo que necesita vigilar. Acabaría
+con cada objetivo conociendo media escena.
+
+### D-017 · Registrarse en un grupo va en `_EnterTree`, no en `_Ready`
+
+**Decidido.** Todo lo que se busca por grupo —jugador, enemigos, misión— se apunta al
+grupo en `_EnterTree`.
+**Por qué:** `_Ready` corre en orden de árbol, así que un nodo colocado antes en la escena
+no encuentra al que se registra después. Pasó de verdad: la salida del nivel no encontraba
+la misión solo por estar más arriba en la escena. Todos los `_EnterTree` ocurren antes que
+cualquier `_Ready`, así que el orden dentro de la escena deja de importar.
+
 ---
 
 ## Pendientes de decidir

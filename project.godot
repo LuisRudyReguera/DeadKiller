@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="DeadKillers"
-run/main_scene="uid://12batns5h4i4"
+run/main_scene="res://scenes/levels/Mission01.tscn"
 config/features=PackedStringArray("4.7", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 

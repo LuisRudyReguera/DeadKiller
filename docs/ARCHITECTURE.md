@@ -17,6 +17,9 @@
 /resources   recursos .tres (WeaponData, EnemyData…)
 /resources/weapons   un .tres por arma
 /resources/enemies   un .tres por arquetipo
+/scripts/missions    objetivos, recogibles y control de misión
+/scripts/ui          HUD y pantallas
+/scripts/tools       utilidades de desarrollo, no forman parte del juego
 /models      modelos .glb
 /audio       sonidos y música
 /materials   materiales y shaders

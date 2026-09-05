@@ -1,0 +1,300 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://cfwf5hi1581gd" path="res://scripts/player/PlayerController.cs" id="1_player"]
+[ext_resource type="Script" uid="uid://b7thb778sdkk7" path="res://scripts/player/CameraRig.cs" id="2_rig"]
+[ext_resource type="Script" path="res://scripts/components/HealthComponent.cs" id="3_health"]
+[ext_resource type="Script" path="res://scripts/components/HitboxComponent.cs" id="4_hitbox"]
+[ext_resource type="Script" path="res://scripts/components/HitFlashComponent.cs" id="5_flash"]
+[ext_resource type="StandardMaterial3D" path="res://resources/hit_flash_material.tres" id="6_flashmat"]
+[ext_resource type="StandardMaterial3D" path="res://resources/sword_arc_material.tres" id="7_arcmat"]
+[ext_resource type="Script" path="res://scripts/weapons/WeaponHolder.cs" id="8_holder"]
+[ext_resource type="Script" path="res://scripts/weapons/AmmoPouch.cs" id="9_pouch"]
+[ext_resource type="Resource" path="res://resources/weapons/short_sword.tres" id="10_sword"]
+[ext_resource type="Resource" path="res://resources/weapons/short_bow.tres" id="11_bow"]
+[ext_resource type="Resource" path="res://resources/weapons/crossbow.tres" id="12_crossbow"]
+[ext_resource type="PackedScene" path="res://scenes/weapons/WeaponPickup.tscn" id="13_weaponpickup"]
+[ext_resource type="AudioStream" path="res://audio/hit_impact.wav" id="14_impact"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/Werewolf.tscn" id="15_wolf"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/Vampire.tscn" id="16_vamp"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/Demon.tscn" id="17_demon"]
+[ext_resource type="PackedScene" path="res://scenes/pickups/ItemPickup.tscn" id="18_item"]
+[ext_resource type="Script" path="res://scripts/missions/Mission.cs" id="19_mission"]
+[ext_resource type="Script" path="res://scripts/missions/PurgeObjective.cs" id="20_purge"]
+[ext_resource type="Script" path="res://scripts/missions/CollectObjective.cs" id="21_collect"]
+[ext_resource type="Script" path="res://scripts/missions/ExitZone.cs" id="22_exit"]
+[ext_resource type="PackedScene" path="res://scenes/ui/MissionHud.tscn" id="23_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/SummaryScreen.tscn" id="24_summary"]
+[ext_resource type="StandardMaterial3D" path="res://resources/stone_floor.tres" id="26_floor"]
+[ext_resource type="StandardMaterial3D" path="res://resources/stone_wall.tres" id="27_wall"]
+[ext_resource type="StandardMaterial3D" path="res://resources/outer_ground.tres" id="28_ground"]
+[ext_resource type="StandardMaterial3D" path="res://resources/hunter_body.tres" id="29_hunter"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]
+sky_horizon_color = Color(0.42, 0.4, 0.46, 1)
+ground_horizon_color = Color(0.42, 0.4, 0.46, 1)
+sky_top_color = Color(0.13, 0.12, 0.2, 1)
+sky_horizon_color = Color(0.35, 0.31, 0.36, 1)
+
+[sub_resource type="Sky" id="Sky_main"]
+sky_material = SubResource("ProceduralSkyMaterial_sky")
+
+[sub_resource type="Environment" id="Environment_main"]
+background_mode = 2
+sky = SubResource("Sky_main")
+ambient_light_source = 3
+ambient_light_color = Color(0.22, 0.22, 0.3, 1)
+ambient_light_energy = 0.7
+ambient_light_sky_contribution = 0.25
+glow_enabled = true
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_player"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_player"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_marker"]
+size = Vector3(0.15, 0.15, 0.6)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_melee"]
+resource_local_to_scene = true
+radius = 2.0
+
+[sub_resource type="PrismMesh" id="PrismMesh_arc"]
+size = Vector3(2.3, 2, 0.06)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_exit"]
+size = Vector3(4, 3, 4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_exit"]
+size = Vector3(4, 0.1, 4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_locked"]
+emission_enabled = true
+emission = Color(0.6, 0.12, 0.12, 1)
+emission_energy_multiplier = 0.9
+albedo_color = Color(0.4, 0.12, 0.12, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_open"]
+emission_enabled = true
+emission = Color(0.3, 0.95, 0.45, 1)
+emission_energy_multiplier = 1.8
+albedo_color = Color(0.3, 0.85, 0.45, 1)
+
+[node name="Mission01" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_main")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+light_energy = 0.85
+shadow_enabled = true
+
+[node name="OuterGround" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.9, 0)
+material = ExtResource("28_ground")
+size = Vector3(80, 1, 80)
+
+[node name="Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+use_collision = true
+material = ExtResource("26_floor")
+size = Vector3(30, 0.5, 30)
+
+[node name="WallNorth" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -15.25)
+use_collision = true
+material = ExtResource("27_wall")
+size = Vector3(31, 4, 0.5)
+
+[node name="WallSouth" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 15.25)
+use_collision = true
+material = ExtResource("27_wall")
+size = Vector3(31, 4, 0.5)
+
+[node name="WallEast" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.25, 2, 0)
+use_collision = true
+material = ExtResource("27_wall")
+size = Vector3(0.5, 4, 31)
+
+[node name="WallWest" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.25, 2, 0)
+use_collision = true
+material = ExtResource("27_wall")
+size = Vector3(0.5, 4, 31)
+
+[node name="PillarA" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.5, 2)
+use_collision = true
+material = ExtResource("27_wall")
+size = Vector3(3, 3, 3)
+
+[node name="PillarB" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.5, -5)
+use_collision = true
+material = ExtResource("27_wall")
+size = Vector3(3, 3, 3)
+
+[node name="Player" type="CharacterBody3D" parent="." groups=["player"] node_paths=PackedStringArray("Health", "Weapons")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
+collision_layer = 2
+collision_mask = 5
+script = ExtResource("1_player")
+Health = NodePath("HealthComponent")
+Weapons = NodePath("WeaponHolder")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_player")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+material_override = ExtResource("29_hunter")
+mesh = SubResource("CapsuleMesh_player")
+
+[node name="FacingMarker" type="MeshInstance3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -0.5)
+mesh = SubResource("BoxMesh_marker")
+
+[node name="HealthComponent" type="Node" parent="Player"]
+script = ExtResource("3_health")
+MaxHealth = 100
+FlatArmor = 0
+
+[node name="HitFlash" type="Node" parent="Player" node_paths=PackedStringArray("Target", "Health")]
+script = ExtResource("5_flash")
+Target = NodePath("../MeshInstance3D")
+Health = NodePath("../HealthComponent")
+FlashMaterial = ExtResource("6_flashmat")
+
+[node name="MeleeHitbox" type="Area3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+collision_layer = 16
+collision_mask = 4
+script = ExtResource("4_hitbox")
+Damage = 25
+IgnoresArmor = false
+ArcDegrees = 60.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player/MeleeHitbox"]
+shape = SubResource("SphereShape3D_melee")
+
+[node name="SwingArc" type="Node3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+visible = false
+
+[node name="ArcMesh" type="MeshInstance3D" parent="Player/SwingArc"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, -1)
+material_override = ExtResource("7_arcmat")
+mesh = SubResource("PrismMesh_arc")
+
+[node name="Muzzle" type="Node3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -0.7)
+
+[node name="AmmoPouch" type="Node" parent="Player"]
+script = ExtResource("9_pouch")
+Arrows = 24
+MaxArrows = 60
+Bolts = 6
+MaxBolts = 20
+Powder = 2
+MaxPowder = 8
+
+[node name="WeaponSound" type="AudioStreamPlayer3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+unit_size = 25.0
+
+[node name="ImpactSound" type="AudioStreamPlayer3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+stream = ExtResource("14_impact")
+unit_size = 25.0
+
+[node name="WeaponHolder" type="Node" parent="Player" node_paths=PackedStringArray("MeleeHitbox", "MeleeShape", "Muzzle", "Ammo", "Sound", "ImpactSound", "SwingVisual")]
+script = ExtResource("8_holder")
+Weapons = Array[Resource]([ExtResource("10_sword"), ExtResource("11_bow")])
+MeleeHitbox = NodePath("../MeleeHitbox")
+MeleeShape = NodePath("../MeleeHitbox/CollisionShape3D")
+Muzzle = NodePath("../Muzzle")
+Ammo = NodePath("../AmmoPouch")
+Sound = NodePath("../WeaponSound")
+ImpactSound = NodePath("../ImpactSound")
+SwingVisual = NodePath("../SwingArc")
+SwingVisualDuration = 0.12
+SwingVisualBaseHalfWidth = 1.15
+SwingVisualBaseRange = 2.0
+
+[node name="CameraRig" type="Node3D" parent="." node_paths=PackedStringArray("Target")]
+script = ExtResource("2_rig")
+Target = NodePath("../Player")
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig"]
+transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 0, 12.124, 7)
+fov = 50.0
+
+[node name="Werewolf" parent="." instance=ExtResource("15_wolf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, 3)
+
+[node name="Vampire" parent="." instance=ExtResource("16_vamp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, -3)
+
+[node name="Demon" parent="." instance=ExtResource("17_demon")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -11)
+
+[node name="KeyPickup" parent="." instance=ExtResource("18_item")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.5, 0, -12.5)
+Kind = 1
+Amount = 1
+
+[node name="ArrowsA" parent="." instance=ExtResource("18_item")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0, -12)
+Kind = 2
+Amount = 12
+
+[node name="ArrowsB" parent="." instance=ExtResource("18_item")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 8)
+Kind = 2
+Amount = 12
+
+[node name="CrossbowPickup" parent="." instance=ExtResource("13_weaponpickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 9)
+Weapon = ExtResource("12_crossbow")
+
+[node name="ExitZone" type="Area3D" parent="." node_paths=PackedStringArray("Marker")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -13.5)
+collision_layer = 128
+collision_mask = 2
+script = ExtResource("22_exit")
+Marker = NodePath("Marker")
+LockedMaterial = SubResource("StandardMaterial3D_locked")
+OpenMaterial = SubResource("StandardMaterial3D_open")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ExitZone"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("BoxShape3D_exit")
+
+[node name="Marker" type="MeshInstance3D" parent="ExitZone"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, 0)
+mesh = SubResource("BoxMesh_exit")
+
+[node name="Mission" type="Node" parent="."]
+script = ExtResource("19_mission")
+Title = "Limpiar la cripta"
+
+[node name="Purge" type="Node" parent="Mission"]
+script = ExtResource("20_purge")
+Description = "Acabar con todo lo que se mueva"
+
+[node name="FindKey" type="Node" parent="Mission"]
+script = ExtResource("21_collect")
+Description = "Encontrar la llave del portón"
+Kind = 1
+Required = 1
+
+[node name="MissionHud" parent="." instance=ExtResource("23_hud")]
+
+[node name="SummaryScreen" parent="." instance=ExtResource("24_summary")]

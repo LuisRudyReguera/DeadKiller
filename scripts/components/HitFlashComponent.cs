@@ -38,6 +38,20 @@ public partial class HitFlashComponent : Node
         Health.HealthChanged += OnHealthChanged;
     }
 
+    public override void _ExitTree()
+    {
+        // Ver D-011: un campo de C# que apunta a un Resource lo mantiene vivo más allá
+        // del cierre del motor.
+        // IsInstanceValid y no solo != null: al destruirse la escena, el hermano puede
+        // estar ya liberado y su envoltorio de C# sigue sin ser null.
+        if (IsInstanceValid(Target))
+        {
+            Target.MaterialOverlay = null;
+        }
+
+        FlashMaterial = null;
+    }
+
     public override void _Process(double delta)
     {
         _remaining -= (float)delta;

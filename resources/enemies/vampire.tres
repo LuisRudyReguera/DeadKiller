@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/EnemyData.cs" id="1_script"]
+[ext_resource type="AudioStream" path="res://audio/vampire_hiss.wav" id="2_sound"]
+
+[resource]
+script = ExtResource("1_script")
+DisplayName = "Vampiro"
+MaxHealth = 60
+FlatArmor = 0
+MoveSpeed = 5.0
+LungeSpeed = 8.0
+SightRange = 12.0
+LoseSightRange = 16.0
+Damage = 12
+IgnoresArmor = false
+AttackRange = 1.8
+AttackArcDegrees = 120.0
+PrepareRange = 2.8
+AttackWarning = 0.5
+AlertDuration = 0.5
+LungeDuration = 0.2
+RecoveryDuration = 0.5
+StrafeStrength = 0.8
+BlinkInterval = 1.2
+BlinkDistance = 4.0
+BodyColor = Color(0.36, 0.16, 0.52, 1)
+TelegraphColor = Color(0.6, 0.95, 1, 1)
+WarningSound = ExtResource("2_sound")
+MinGold = 10
+MaxGold = 20

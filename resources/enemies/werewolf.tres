@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/EnemyData.cs" id="1_script"]
+[ext_resource type="AudioStream" path="res://audio/werewolf_growl.wav" id="2_sound"]
+
+[resource]
+script = ExtResource("1_script")
+DisplayName = "Licántropo"
+MaxHealth = 40
+FlatArmor = 0
+MoveSpeed = 5.0
+LungeSpeed = 11.0
+SightRange = 12.0
+LoseSightRange = 16.0
+Damage = 15
+IgnoresArmor = false
+AttackRange = 1.5
+AttackArcDegrees = 120.0
+PrepareRange = 2.5
+AttackWarning = 0.4
+AlertDuration = 0.6
+LungeDuration = 0.25
+RecoveryDuration = 0.6
+StrafeStrength = 0.0
+BlinkInterval = 0.0
+BlinkDistance = 4.0
+BodyColor = Color(0.55, 0.11, 0.11, 1)
+TelegraphColor = Color(1, 0.72, 0.15, 1)
+WarningSound = ExtResource("2_sound")
+MinGold = 5
+MaxGold = 10

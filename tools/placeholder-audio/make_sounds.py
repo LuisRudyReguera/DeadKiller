@@ -133,9 +133,54 @@ def reload_click(duration=0.10):
         yield value * 0.7
 
 
+def hiss(duration=0.40):
+    """Siseo del vampiro: ruido agudo y sibilante, sin tono definido."""
+    random.seed(6)
+    total = int(RATE * duration)
+    previous = 0.0
+
+    for index in range(total):
+        position = index / total
+        noise = random.uniform(-1.0, 1.0)
+
+        # Paso ALTO barato: la diferencia con la muestra suavizada deja solo lo agudo.
+        previous += 0.25 * (noise - previous)
+        value = noise - previous
+
+        # Ondula un poco para que parezca respiracion y no ruido blanco plano.
+        value *= 0.7 + 0.3 * math.sin(2.0 * math.pi * 7.0 * position)
+        value *= envelope(position, attack=0.15, release=0.45)
+
+        yield value * 0.75
+
+
+def roar(duration=0.70):
+    """Rugido del demonio: muy grave, largo y con aspereza. Se nota que es grande."""
+    random.seed(7)
+    total = int(RATE * duration)
+    phase_low = 0.0
+    phase_sub = 0.0
+
+    for index in range(total):
+        position = index / total
+        # Baja de 55 a 38 Hz: cuanto mas grave, mas grande parece.
+        frequency = 55.0 - 17.0 * position
+
+        phase_low += 2.0 * math.pi * frequency / RATE
+        phase_sub += 2.0 * math.pi * frequency * 1.5 / RATE
+
+        value = math.sin(phase_low) * 0.7 + math.sin(phase_sub) * 0.25
+        value += random.uniform(-1.0, 1.0) * 0.18
+        value *= envelope(position, attack=0.12, release=0.35)
+
+        yield value * 0.95
+
+
 if __name__ == "__main__":
     write("werewolf_growl.wav", growl())
     write("sword_swing.wav", swing())
     write("hit_impact.wav", impact())
     write("bow_shot.wav", bow_shot())
     write("reload_click.wav", reload_click())
+    write("vampire_hiss.wav", hiss())
+    write("demon_roar.wav", roar())

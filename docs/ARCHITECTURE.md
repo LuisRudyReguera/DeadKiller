@@ -16,6 +16,7 @@
 /scripts/components  componentes reutilizables sin escena propia
 /resources   recursos .tres (WeaponData, EnemyData…)
 /resources/weapons   un .tres por arma
+/resources/enemies   un .tres por arquetipo
 /models      modelos .glb
 /audio       sonidos y música
 /materials   materiales y shaders

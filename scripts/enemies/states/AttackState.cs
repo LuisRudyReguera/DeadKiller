@@ -3,11 +3,11 @@ using Godot;
 namespace DeadKillers.Enemies;
 
 /// <summary>
-/// Atacar: embiste en línea recta a la dirección que fijó al empezar. Si el jugador
-/// se ha movido durante el aviso, la embestida pasa de largo.
+/// Atacar: arranca en línea recta hacia la dirección que fijó al empezar. Si el jugador
+/// se ha movido durante el aviso, pasa de largo.
 /// </summary>
 [GlobalClass]
-public partial class WerewolfAttackState : WerewolfState
+public partial class AttackState : EnemyState
 {
     private float _elapsed;
     private bool _hasLanded;
@@ -23,22 +23,22 @@ public partial class WerewolfAttackState : WerewolfState
 
     public override void PhysicsUpdate(double delta)
     {
-        if (Agent == null)
+        if (!IsReady)
         {
             return;
         }
 
         Agent.Lunge(delta);
 
-        // Un solo mordisco por embestida, aunque el roce dure varios fotogramas.
-        if (!_hasLanded && Agent.Bite != null && Agent.Bite.Strike() > 0)
+        // Un solo golpe por ataque, aunque el roce dure varios fotogramas.
+        if (!_hasLanded && Agent.Attack != null && Agent.Attack.Strike() > 0)
         {
             _hasLanded = true;
         }
 
         _elapsed += (float)delta;
 
-        if (_elapsed >= Agent.LungeDuration)
+        if (_elapsed >= Data.LungeDuration)
         {
             RequestTransition(Recovery);
         }

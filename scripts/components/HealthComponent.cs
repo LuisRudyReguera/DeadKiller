@@ -33,6 +33,20 @@ public partial class HealthComponent : Node
     }
 
     /// <summary>
+    /// Reconfigura el componente y deja la vida al máximo. Hace falta porque los hijos
+    /// ejecutan _Ready ANTES que su padre: cuando un enemigo vuelca su `.tres` encima,
+    /// este componente ya había fijado su vida con el valor de la escena.
+    /// </summary>
+    public void Reset(int maxHealth, int flatArmor)
+    {
+        MaxHealth = Mathf.Max(maxHealth, 1);
+        FlatArmor = Mathf.Max(flatArmor, 0);
+        Current = MaxHealth;
+
+        EmitSignal(SignalName.HealthChanged, Current, MaxHealth);
+    }
+
+    /// <summary>
     /// Busca el componente de vida entre los hijos directos de un nodo. Lo usan los
     /// hitbox para no tener que conocer el tipo concreto de a quién golpean.
     /// </summary>

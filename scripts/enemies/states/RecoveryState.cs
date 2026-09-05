@@ -3,11 +3,11 @@ using Godot;
 namespace DeadKillers.Enemies;
 
 /// <summary>
-/// Alerta: te ha visto y se gira hacia ti, pero todavía no se lanza. Es el margen que
-/// tiene el jugador para reaccionar. Aquí irán después el gruñido y el cambio de postura.
+/// Recuperación: queda expuesto tras atacar. Es la ventana en la que el jugador puede
+/// acercarse a golpear sin que le devuelvan el golpe.
 /// </summary>
 [GlobalClass]
-public partial class WerewolfAlertState : WerewolfState
+public partial class RecoveryState : EnemyState
 {
     private float _elapsed;
 
@@ -18,17 +18,15 @@ public partial class WerewolfAlertState : WerewolfState
 
     public override void PhysicsUpdate(double delta)
     {
-        if (Agent == null)
+        if (!IsReady)
         {
             return;
         }
 
         Agent.StandStill(delta);
-        Agent.FaceTarget();
-
         _elapsed += (float)delta;
 
-        if (_elapsed >= Agent.AlertDuration)
+        if (_elapsed >= Data.RecoveryDuration)
         {
             RequestTransition(Chase);
         }

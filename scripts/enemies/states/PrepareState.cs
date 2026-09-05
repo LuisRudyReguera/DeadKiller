@@ -3,11 +3,12 @@ using Godot;
 namespace DeadKillers.Enemies;
 
 /// <summary>
-/// Preparar ataque: se planta, encara al jugador y AVISA. Es el estado que hace que
-/// el juego sea justo; si el jugador muere aquí, tiene que sentir que fue culpa suya.
+/// Preparar ataque: se planta, encara al jugador y AVISA, de forma visible y audible.
+/// Es el estado que hace justo al juego. docs/DESIGN.md: un enemigo que hace daño sin
+/// aviso previo es un bug de diseño aunque el código funcione.
 /// </summary>
 [GlobalClass]
-public partial class WerewolfPrepareState : WerewolfState
+public partial class PrepareState : EnemyState
 {
     private float _elapsed;
 
@@ -15,9 +16,8 @@ public partial class WerewolfPrepareState : WerewolfState
     {
         _elapsed = 0.0f;
 
-        // Las dos mitades del aviso: se pone ámbar y gruñe.
         Agent?.SetTelegraph(true);
-        Agent?.Growl();
+        Agent?.Warn();
     }
 
     public override void Exit()
@@ -27,7 +27,7 @@ public partial class WerewolfPrepareState : WerewolfState
 
     public override void PhysicsUpdate(double delta)
     {
-        if (Agent == null)
+        if (!IsReady)
         {
             return;
         }
@@ -38,7 +38,7 @@ public partial class WerewolfPrepareState : WerewolfState
 
         _elapsed += (float)delta;
 
-        if (_elapsed >= Agent.AttackWarning)
+        if (_elapsed >= Data.AttackWarning)
         {
             RequestTransition(Attack);
         }

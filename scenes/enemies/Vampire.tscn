@@ -1,0 +1,113 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/Enemy.cs" id="1_enemy"]
+[ext_resource type="Resource" path="res://resources/enemies/vampire.tres" id="2_data"]
+[ext_resource type="Script" path="res://scripts/components/HealthComponent.cs" id="3_health"]
+[ext_resource type="Script" path="res://scripts/components/StateMachine.cs" id="4_machine"]
+[ext_resource type="Script" path="res://scripts/components/HitboxComponent.cs" id="5_hitbox"]
+[ext_resource type="Script" path="res://scripts/components/HitFlashComponent.cs" id="6_flash"]
+[ext_resource type="StandardMaterial3D" path="res://resources/hit_flash_material.tres" id="7_flashmat"]
+[ext_resource type="Script" path="res://scripts/enemies/states/IdleState.cs" id="8_idle"]
+[ext_resource type="Script" path="res://scripts/enemies/states/AlertState.cs" id="9_alert"]
+[ext_resource type="Script" path="res://scripts/enemies/states/ChaseState.cs" id="10_chase"]
+[ext_resource type="Script" path="res://scripts/enemies/states/PrepareState.cs" id="11_prepare"]
+[ext_resource type="Script" path="res://scripts/enemies/states/AttackState.cs" id="12_attack"]
+[ext_resource type="Script" path="res://scripts/enemies/states/RecoveryState.cs" id="13_recovery"]
+[ext_resource type="Script" path="res://scripts/enemies/states/BlinkState.cs" id="14_blink"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
+radius = 0.38
+height = 1.9
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_body"]
+radius = 0.38
+height = 1.9
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_body"]
+resource_local_to_scene = true
+albedo_color = Color(0.5, 0.5, 0.5, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_marker"]
+size = Vector3(0.14, 0.14, 0.6)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_reach"]
+resource_local_to_scene = true
+radius = 1.8
+
+[node name="Vampire" type="CharacterBody3D" groups=["enemy"] node_paths=PackedStringArray("Health", "States", "Attack", "AttackShape", "Body", "Voice")]
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("1_enemy")
+Data = ExtResource("2_data")
+Health = NodePath("HealthComponent")
+States = NodePath("StateMachine")
+Attack = NodePath("AttackHitbox")
+AttackShape = NodePath("AttackHitbox/CollisionShape3D")
+Body = NodePath("MeshInstance3D")
+Voice = NodePath("Voice")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
+shape = SubResource("CapsuleShape3D_body")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
+material_override = SubResource("StandardMaterial3D_body")
+mesh = SubResource("CapsuleMesh_body")
+
+[node name="FacingMarker" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, -0.5)
+mesh = SubResource("BoxMesh_marker")
+
+[node name="HealthComponent" type="Node" parent="."]
+script = ExtResource("3_health")
+MaxHealth = 40
+FlatArmor = 0
+
+[node name="HitFlash" type="Node" parent="." node_paths=PackedStringArray("Target", "Health")]
+script = ExtResource("6_flash")
+Target = NodePath("../MeshInstance3D")
+Health = NodePath("../HealthComponent")
+FlashMaterial = ExtResource("7_flashmat")
+
+[node name="Voice" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 0)
+unit_size = 25.0
+
+[node name="AttackHitbox" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
+collision_layer = 8
+collision_mask = 2
+script = ExtResource("5_hitbox")
+Damage = 15
+IgnoresArmor = false
+ArcDegrees = 120.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AttackHitbox"]
+shape = SubResource("SphereShape3D_reach")
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource("4_machine")
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource("8_idle")
+
+[node name="Alert" type="Node" parent="StateMachine"]
+script = ExtResource("9_alert")
+
+[node name="Chase" type="Node" parent="StateMachine"]
+script = ExtResource("10_chase")
+StrafeFlipInterval = 0.7
+
+[node name="Prepare" type="Node" parent="StateMachine"]
+script = ExtResource("11_prepare")
+
+[node name="Attack" type="Node" parent="StateMachine"]
+script = ExtResource("12_attack")
+
+[node name="Recovery" type="Node" parent="StateMachine"]
+script = ExtResource("13_recovery")
+
+[node name="Blink" type="Node" parent="StateMachine"]
+script = ExtResource("14_blink")
+Duration = 0.3

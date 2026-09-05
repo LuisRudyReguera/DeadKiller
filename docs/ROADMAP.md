@@ -10,15 +10,18 @@ cierre. Nada de "ya lo arreglo luego".
 
 ## Estado actual
 
-**Hito activo:** 2 — Armas
-**Hecho:** hitos 0 y 1 cerrados. El hito 2 está **implementado y verificado sin ventana**:
-cuatro armas definidas solo con `.tres`, cambio con la rueda, arco y ballesta disparando
-proyectiles con munición separada por tipo, recarga, y armas recogibles del suelo.
-**Siguiente tarea:** probarlo a mano. Falta lo que no se puede comprobar sin pantalla ni
-ratón: que la rueda cambie de arma con soltura, que apuntar con el arco sea cómodo, y
-cuánta munición se gasta de verdad en un asalto.
+**Hito activo:** 3 — Bestiario
+**Hecho:** hitos 0, 1 y 2 cerrados. El hito 3 está **implementado y verificado sin
+ventana**: los tres arquetipos coexisten en la sala, cada uno con sus números, su aviso
+sonoro y su forma de moverse. Ya no existe la clase `Werewolf`: hay un `Enemy` genérico
+guiado por `EnemyData` (D-013).
+**Siguiente tarea:** probarlo a mano. Falta lo que no se puede comprobar sin pantalla:
+si de verdad se juegan distinto los tres, si los tres avisos se distinguen de oído, y si
+pelear contra los tres a la vez es abarcable o un caos.
 
-**Bloqueos:** ninguno.
+**Bloqueos:** ninguno. Nota: al **cerrar** el juego salen dos líneas sobre instancias
+sin liberar. Está investigado y es del servidor de audio de Godot, no nuestro (D-015).
+Durante la partida la consola está limpia.
 
 ---
 
@@ -62,11 +65,11 @@ Cerrado cuando:
 ## Hito 3 — Bestiario
 
 Cerrado cuando:
-- [ ] Los tres arquetipos coexisten en una escena
-- [ ] Cada uno se juega distinto: quedarse quieto mata contra el licántropo, apuntar
+- [x] Los tres arquetipos coexisten en una escena
+- [x] Cada uno se juega distinto: quedarse quieto mata contra el licántropo, apuntar
       mal mata contra el vampiro, el pánico mata contra el demonio
-- [ ] Cada uno tiene su aviso sonoro propio
-- [ ] **Prueba real:** añadir un cuarto tipo no requiere tocar clases existentes
+- [x] Cada uno tiene su aviso sonoro propio
+- [x] **Prueba real:** añadir un cuarto tipo no requiere tocar clases existentes
 
 ## Hito 4 — Misión jugable
 

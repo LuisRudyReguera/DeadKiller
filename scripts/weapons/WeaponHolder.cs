@@ -93,9 +93,17 @@ public partial class WeaponHolder : Node
         Current = null;
         Weapons = null;
 
-        if (Sound != null)
+        // Parar antes de soltar: un sonido a medias al cerrar deja vivo su objeto de
+        // reproducción (D-011).
+        if (IsInstanceValid(Sound))
         {
+            Sound.Stop();
             Sound.Stream = null;
+        }
+
+        if (IsInstanceValid(ImpactSound))
+        {
+            ImpactSound.Stop();
         }
     }
 

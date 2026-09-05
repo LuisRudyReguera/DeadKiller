@@ -5,7 +5,9 @@
 [ext_resource type="Script" path="res://scripts/levels/TestRoom.cs" id="3_room"]
 [ext_resource type="Script" path="res://scripts/components/HealthComponent.cs" id="4_health"]
 [ext_resource type="Script" path="res://scripts/components/HitboxComponent.cs" id="5_hitbox"]
-[ext_resource type="PackedScene" path="res://scenes/enemies/werewolf/Werewolf.tscn" id="6_wolf"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/Werewolf.tscn" id="6_wolf"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/Vampire.tscn" id="19_vamp"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/Demon.tscn" id="20_demon"]
 [ext_resource type="AudioStream" path="res://audio/hit_impact.wav" id="8_impact"]
 [ext_resource type="Script" path="res://scripts/components/HitFlashComponent.cs" id="9_flash"]
 [ext_resource type="StandardMaterial3D" path="res://resources/hit_flash_material.tres" id="10_flashmat"]
@@ -172,6 +174,12 @@ SwingVisualBaseRange = 2.0
 
 [node name="Werewolf" parent="." instance=ExtResource("6_wolf")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -7)
+
+[node name="Vampire" parent="." instance=ExtResource("19_vamp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -7)
+
+[node name="Demon" parent="." instance=ExtResource("20_demon")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8.5)
 
 [node name="CrossbowPickup" parent="." instance=ExtResource("18_pickup")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 4)

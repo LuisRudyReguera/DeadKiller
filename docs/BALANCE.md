@@ -29,17 +29,23 @@
 
 **Armadura plana:** se resta del daño recibido, con un mínimo de 1. La maza la ignora.
 
-### Licántropo — tiempos de la máquina de estados
+### Tiempos de la máquina de estados
 
-Provisionales, salidos de montar el hito 1. Se ajustan jugando.
+Provisionales, salidos de montar los hitos 1 y 3. Se ajustan jugando. Todos viven en el
+`.tres` de cada arquetipo, en `resources/enemies/`.
 
-| | Valor | Por qué |
-|---|---|---|
-| Duración de `Alerta` | 0,6 s | Se gira y reacciona antes de lanzarse; hace legible que te ha visto |
-| Distancia a la que prepara el ataque | 2,5 m | Mayor que el alcance de 1,5 m, para que la embestida tenga recorrido |
-| Duración de la embestida | 0,25 s | A 11 m/s recorre unos 2,75 m: cubre el hueco y pasa de largo si fallas |
-| Duración de `Recuperación` | 0,6 s | La ventana en la que el jugador puede contraatacar sin que le muerdan |
-| Distancia a la que pierde al jugador | 16 m | Los 12 m de visión + 4 de histéresis, para que no parpadee en el borde |
+| | Licántropo | Vampiro | Demonio | Por qué se diferencian |
+|---|---|---|---|---|
+| Duración de `Alerta` | 0,6 s | 0,5 s | 0,9 s | El demonio tarda en arrancar; es lo que lo hace evitable |
+| Distancia a la que prepara | 2,5 m | 2,8 m | 3,2 m | Escala con el alcance de cada uno |
+| Velocidad del arranque | 11 m/s | 8 m/s | 6 m/s | El licántropo embiste; el demonio solo se echa encima |
+| Duración del arranque | 0,25 s | 0,2 s | 0,35 s | |
+| Duración de `Recuperación` | 0,6 s | 0,5 s | 1,1 s | La del demonio es larga a propósito: es tu turno |
+| Zigzag lateral | 0 | 0,8 | 0 | Lo que hace que fallarle al vampiro sea fácil |
+| Intervalo de parpadeo | — | 1,2 s | — | Reaparece 4 m más cerca; castiga confiarse por la distancia |
+
+Distancia a la que pierden al jugador: 16 m para los tres. Son los 12 m de visión más
+4 de histéresis, para que no entren y salgan de persecución justo en el borde.
 
 **Aviso previo:** segundos entre que el enemigo empieza a telegrafiar y el golpe conecta.
 Nunca puede ser 0. Es el margen que tiene el jugador para reaccionar y define si el juego

@@ -108,6 +108,51 @@ ataque tenía retardo, pero eran espadazos que no llegaban a ocurrir.
 **La rueda del ratón obliga:** no tiene estado «pulsado» que sondear, solo eventos.
 **Se mantiene el sondeo** solo para el movimiento, donde mantener la tecla es la norma.
 
+### D-013 · Un solo `Enemy` guiado por `EnemyData`, no una clase por monstruo
+
+**Decidido.** No existe una clase `Werewolf`. Hay un `Enemy` genérico, un `EnemyData` en
+`.tres` por arquetipo, y una bolsa de estados reutilizables. Lo que distingue a un
+licántropo de un vampiro son sus números y qué estados cuelgue su escena.
+**Por qué:** es la prueba de cierre del hito 3, que exige que añadir un cuarto tipo no
+toque ninguna clase existente. Un cuarto arquetipo es hoy un `.tres` y una escena; solo
+necesitaría código si trajera un comportamiento que ningún estado cubre, y entonces sería
+una clase **nueva**, no una modificación.
+**Descartado:** herencia `Werewolf : Enemy`. Tres monstruos que solo se diferencian en
+números no justifican tres clases, y contradice «composición sobre herencia».
+
+### D-014 · Los cadáveres salen del grupo y dejan de colisionar
+
+**Decidido.** Al morir, un enemigo se borra del grupo `enemy` y pone su capa de colisión
+a 0, pero el nodo **no** se destruye.
+**Por qué:** un cadáver no debe contar como enemigo vivo en una purga ni bloquear el paso,
+pero el nodo tiene que seguir existiendo porque de él saldrá el oro en el hito 4.
+**Se detectó** probando: el jugador de prueba se quedaba golpeando a un muerto porque
+seguía siendo el objetivo más cercano.
+
+### D-015 · La fuga de audio al cerrar es del motor, no nuestra
+
+**Investigado y cerrado.** Al cerrar el juego aparecen en la consola:
+
+```
+WARNING: 2 ObjectDB instances were leaked at exit
+ERROR: 1 resources still in use at exit  (AudioStreamPlaybackWAV)
+```
+
+**No es nuestro código.** Se comprobó: `_ExitTree` sí se ejecuta en todos los nodos, los
+`AudioStreamPlayer3D` están parados (`Playing == false`) y sueltan su `Stream` antes de
+desaparecer. El objeto que queda vivo es un `AudioStreamPlaybackWAV` interno del servidor
+de audio de Godot, que no se libera antes de que el motor haga su comprobación de fugas.
+
+**Se descartó por medición**, no por suposición: no es el recolector de basura de C#
+(forzarlo no cambia nada), no escala con los reinicios de escena, y desaparece si ningún
+sonido llega a reproducirse.
+
+**Qué significa para «consola limpia»:** ese criterio se refiere a errores **durante la
+partida**. Este mensaje sale solo al cerrar y no afecta a nada. Si algún día molesta, la
+vía es reportarlo aguas arriba, no contorsionar nuestro código.
+
+**No volver a investigarlo** sin una razón nueva. Costó bastante llegar aquí.
+
 ---
 
 ## Pendientes de decidir

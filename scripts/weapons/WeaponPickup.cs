@@ -31,6 +31,11 @@ public partial class WeaponPickup : Area3D
         }
     }
 
+    public override void _ExitTree()
+    {
+        Weapon = null;   // ver D-011
+    }
+
     public override void _Process(double delta)
     {
         Spinner?.RotateY(SpinSpeed * (float)delta);

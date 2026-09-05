@@ -2,22 +2,20 @@ using Godot;
 
 namespace DeadKillers.Enemies;
 
-/// <summary>
-/// Inactivo: quieto en su sitio hasta que el jugador entra en su distancia de visión.
-/// </summary>
+/// <summary>Inactivo: quieto hasta que el jugador entra en su distancia de visión.</summary>
 [GlobalClass]
-public partial class WerewolfIdleState : WerewolfState
+public partial class IdleState : EnemyState
 {
     public override void PhysicsUpdate(double delta)
     {
-        if (Agent == null)
+        if (!IsReady)
         {
             return;
         }
 
         Agent.StandStill(delta);
 
-        if (Agent.DistanceToTarget() <= Agent.SightRange)
+        if (Agent.DistanceToTarget() <= Data.SightRange)
         {
             RequestTransition(Alert);
         }

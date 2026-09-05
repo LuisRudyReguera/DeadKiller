@@ -23,6 +23,15 @@ muestreando la imagen, no copiando la lista.
 anchura de hombros, la altura y la huella en el suelo. Es lo único que se lee desde la
 cámara cenital y lo que hace que los arquetipos se distingan de un vistazo.
 
+## Ejes: la trampa que cuesta media hora
+
+El exportador de glTF convierte el **-Y de Blender en +Z de Godot**, que es la **espalda**.
+Un modelo construido mirando a -Y en Blender llega a Godot dando la espalda a todo, y
+como los enemigos usan `LookAt`, se ve rarísimo sin que dé ningún error.
+
+`make_placeholders.py` lo resuelve girando el objeto 180° antes de exportar. Si un modelo
+viene de fuera y mira al revés, es esto.
+
 ## Placeholders generados por código
 
 Las siluetas provisionales del cazador y de los tres monstruos salen de

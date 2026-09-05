@@ -52,9 +52,9 @@ sky_material = SubResource("ProceduralSkyMaterial_sky")
 background_mode = 2
 sky = SubResource("Sky_main")
 ambient_light_source = 3
-ambient_light_color = Color(0.22, 0.22, 0.3, 1)
-ambient_light_energy = 0.7
-ambient_light_sky_contribution = 0.25
+ambient_light_color = Color(0.34, 0.34, 0.44, 1)
+ambient_light_energy = 1.1
+ambient_light_sky_contribution = 0.35
 glow_enabled = true
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_player"]
@@ -100,7 +100,7 @@ environment = SubResource("Environment_main")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
-light_energy = 0.85
+light_energy = 1.35
 shadow_enabled = true
 
 [node name="OuterGround" type="CSGBox3D" parent="."]
@@ -196,6 +196,15 @@ transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, -1)
 material_override = ExtResource("7_arcmat")
 mesh = SubResource("PrismMesh_arc")
 
+[node name="LanternLight" type="OmniLight3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.31, 0.9, -0.09)
+light_color = Color(1, 0.82, 0.55, 1)
+light_energy = 1.6
+omni_range = 7.5
+
+[node name="WeaponSocket" type="Node3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.9, -0.14)
+
 [node name="Muzzle" type="Node3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -0.7)
 
@@ -217,12 +226,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
 stream = ExtResource("14_impact")
 unit_size = 25.0
 
-[node name="WeaponHolder" type="Node" parent="Player" node_paths=PackedStringArray("MeleeHitbox", "MeleeShape", "Muzzle", "Ammo", "Sound", "ImpactSound", "SwingVisual")]
+[node name="WeaponHolder" type="Node" parent="Player" node_paths=PackedStringArray("MeleeHitbox", "MeleeShape", "Muzzle", "WeaponSocket", "Ammo", "Sound", "ImpactSound", "SwingVisual")]
 script = ExtResource("8_holder")
 Weapons = Array[Resource]([ExtResource("10_sword"), ExtResource("11_bow")])
 MeleeHitbox = NodePath("../MeleeHitbox")
 MeleeShape = NodePath("../MeleeHitbox/CollisionShape3D")
 Muzzle = NodePath("../Muzzle")
+WeaponSocket = NodePath("../WeaponSocket")
 Ammo = NodePath("../AmmoPouch")
 Sound = NodePath("../WeaponSound")
 ImpactSound = NodePath("../ImpactSound")

@@ -32,6 +32,9 @@ public partial class WeaponHolder : Node
     // Desde dónde salen los proyectiles y hacia dónde miran.
     [Export] public Node3D Muzzle { get; set; }
 
+    // Dónde cuelga el modelo del arma equipada. Está en la mano del portador.
+    [Export] public Node3D WeaponSocket { get; set; }
+
     [Export] public AmmoPouch Ammo { get; set; }
 
     [Export] public AudioStreamPlayer3D Sound { get; set; }
@@ -156,6 +159,7 @@ public partial class WeaponHolder : Node
         InMagazine = 0;
 
         ApplyMeleeProfile();
+        ShowWeaponModel();
 
         EmitSignal(SignalName.WeaponChanged, CurrentIndex, Current?.DisplayName ?? string.Empty);
         NotifyAmmoState();
@@ -394,6 +398,32 @@ public partial class WeaponHolder : Node
             halfWidth / SwingVisualBaseHalfWidth,
             1.0f,
             Current.Range / SwingVisualBaseRange);
+    }
+
+    /// <summary>
+    /// Cuelga en la mano el modelo del arma equipada y retira el anterior. Un arma que
+    /// no trae modelo simplemente no se ve; no es un error.
+    /// </summary>
+    private void ShowWeaponModel()
+    {
+        if (WeaponSocket == null)
+        {
+            return;
+        }
+
+        foreach (Node child in WeaponSocket.GetChildren())
+        {
+            child.QueueFree();
+        }
+
+        if (Current?.ModelScene == null || Current.ModelScene.Instantiate() is not Node3D model)
+        {
+            return;
+        }
+
+        WeaponSocket.AddChild(model);
+        model.Position = Vector3.Zero;
+        model.RotationDegrees = Current.ModelRotationDegrees;
     }
 
     private void ShowSwing()

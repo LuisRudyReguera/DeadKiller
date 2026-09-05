@@ -49,6 +49,13 @@ public partial class WeaponData : Resource
 
     [Export] public PackedScene ProjectileScene { get; set; }
 
+    // Lo que se ve en la mano del portador. Sin esto, el arma equipada es invisible.
+    [Export] public PackedScene ModelScene { get; set; }
+
+    // Cada arma se empuña distinto: la espada apunta adelante y arriba, la ballesta
+    // recta al frente. Se corrige aquí en vez de rehacer el modelo.
+    [Export] public Vector3 ModelRotationDegrees { get; set; } = Vector3.Zero;
+
     [Export] public AudioStream FireSound { get; set; }
 
     [Export] public AudioStream ReloadSound { get; set; }

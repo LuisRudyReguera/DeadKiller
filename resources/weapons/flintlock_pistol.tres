@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="WeaponData" format=3]
+
+[ext_resource type="Script" path="res://scripts/weapons/WeaponData.cs" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/weapons/Arrow.tscn" id="2_arrow"]
+[ext_resource type="AudioStream" path="res://audio/hit_impact.wav" id="3_fire"]
+[ext_resource type="AudioStream" path="res://audio/reload_click.wav" id="4_reload"]
+
+[resource]
+script = ExtResource("1_script")
+DisplayName = "Pistola de chispa"
+Kind = 1
+Damage = 120
+Cooldown = 0.0
+MagazineSize = 1
+ReloadTime = 4.0
+SpreadDegrees = 3.0
+Range = 30.0
+ArcDegrees = 60.0
+Ammo = 3
+ProjectileSpeed = 60.0
+MaxTargets = 1
+IgnoresArmor = false
+ProjectileScene = ExtResource("2_arrow")
+FireSound = ExtResource("3_fire")
+ReloadSound = ExtResource("4_reload")

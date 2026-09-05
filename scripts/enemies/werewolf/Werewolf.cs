@@ -13,7 +13,7 @@ public partial class Werewolf : CharacterBody3D
 {
     // --- Números de docs/BALANCE.md ---
 
-    [Export] public float MoveSpeed { get; set; } = 7.0f;
+    [Export] public float MoveSpeed { get; set; } = 5.0f;
 
     // Velocidad de la embestida, más alta que la de persecución.
     [Export] public float LungeSpeed { get; set; } = 11.0f;

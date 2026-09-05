@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="WeaponData" format=3]
+
+[ext_resource type="Script" path="res://scripts/weapons/WeaponData.cs" id="1_script"]
+[ext_resource type="AudioStream" path="res://audio/sword_swing.wav" id="2_fire"]
+
+[resource]
+script = ExtResource("1_script")
+DisplayName = "Espada corta"
+Kind = 0
+Damage = 25
+Cooldown = 0.5
+MagazineSize = 0
+ReloadTime = 0.0
+SpreadDegrees = 0.0
+Range = 2.0
+ArcDegrees = 60.0
+Ammo = 0
+ProjectileSpeed = 0.0
+MaxTargets = 1
+IgnoresArmor = false
+FireSound = ExtResource("2_fire")

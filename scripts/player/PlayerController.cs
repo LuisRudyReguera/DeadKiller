@@ -1,11 +1,14 @@
 using Godot;
 using DeadKillers.Components;
+using DeadKillers.Weapons;
 
 namespace DeadKillers.Player;
 
 /// <summary>
 /// Movimiento del jugador con WASD relativo a la cámara y apuntado al cursor.
 /// Cuerpo y mirada son independientes: se puede retroceder mirando hacia delante.
+///
+/// De las armas no sabe nada: traduce la entrada y se la pasa al WeaponHolder.
 /// </summary>
 public partial class PlayerController : CharacterBody3D
 {
@@ -16,23 +19,9 @@ public partial class PlayerController : CharacterBody3D
 	// A la altura del pecho, tal como pide docs/DESIGN.md.
 	[Export] public float AimHeight { get; set; } = 1.2f;
 
-	// Cadencia de la espada corta en segundos (docs/BALANCE.md).
-	// Provisional: en el hito 2 esto sale de un WeaponData y no de aquí.
-	[Export] public float AttackCooldown { get; set; } = 0.5f;
-
 	[Export] public HealthComponent Health { get; set; }
 
-	[Export] public HitboxComponent Sword { get; set; }
-
-	[Export] public AudioStreamPlayer3D SwingSound { get; set; }
-
-	[Export] public AudioStreamPlayer3D HitSound { get; set; }
-
-	// Malla del arco del espadazo. Se muestra un instante al golpear: sin esto el
-	// ataque no se ve en pantalla y parece que no ha pasado nada.
-	[Export] public Node3D SwingVisual { get; set; }
-
-	[Export] public float SwingVisualDuration { get; set; } = 0.12f;
+	[Export] public WeaponHolder Weapons { get; set; }
 
 	// Cuánto sobrevive un clic sin poder ejecutarse. Un clic rápido dura menos que un
 	// fotograma de física, así que sin este margen se perdería.
@@ -43,9 +32,7 @@ public partial class PlayerController : CharacterBody3D
 	private const float MinAimDistance = 0.01f;
 
 	private float _gravity;
-	private float _cooldown;
 	private float _bufferedAttack;
-	private float _swingVisible;
 	private bool _isDead;
 	private Camera3D _camera;
 
@@ -58,23 +45,43 @@ public partial class PlayerController : CharacterBody3D
 		{
 			Health.Died += OnDied;
 		}
-
-		if (SwingVisual != null)
-		{
-			SwingVisual.Visible = false;
-		}
 	}
 
 	/// <summary>
-	/// El clic se recoge como EVENTO, no sondeando. Sondear con Input.IsActionPressed
-	/// dentro de _PhysicsProcess pierde los clics más cortos que un fotograma, y el
-	/// espadazo desaparece sin dar ningún error.
+	/// Los ataques y los cambios de arma se recogen como EVENTOS, no sondeando. Sondear
+	/// con Input.IsActionPressed dentro de _PhysicsProcess pierde las pulsaciones más
+	/// cortas que un fotograma, y la acción desaparece sin dar ningún error. Con la rueda
+	/// del ratón es peor: no tiene estado "pulsado" que sondear, solo eventos sueltos.
 	/// </summary>
 	public override void _UnhandledInput(InputEvent @event)
 	{
-		if (!_isDead && @event.IsActionPressed("attack_primary"))
+		if (_isDead)
+		{
+			return;
+		}
+
+		if (@event.IsActionPressed("attack_primary"))
 		{
 			_bufferedAttack = AttackBufferTime;
+			return;
+		}
+
+		if (Weapons == null)
+		{
+			return;
+		}
+
+		if (@event.IsActionPressed("reload"))
+		{
+			Weapons.TryReload();
+		}
+		else if (@event.IsActionPressed("weapon_next"))
+		{
+			Weapons.Next();
+		}
+		else if (@event.IsActionPressed("weapon_prev"))
+		{
+			Weapons.Previous();
 		}
 	}
 
@@ -162,67 +169,24 @@ public partial class PlayerController : CharacterBody3D
 		LookAt(target, Vector3.Up);
 	}
 
-	/// <summary>
-	/// Espadazo. El arco y el alcance viven en el HitboxComponent; aquí solo está
-	/// la cadencia, porque es lo que decide cuándo se puede volver a golpear.
-	/// </summary>
 	private void UpdateAttack(double delta)
 	{
-		UpdateSwingVisual(delta);
-
-		if (_cooldown > 0.0f)
-		{
-			_cooldown -= (float)delta;
-		}
-
 		if (_bufferedAttack > 0.0f)
 		{
 			_bufferedAttack -= (float)delta;
 		}
 
-		// Mantener pulsado encadena espadazos; un clic suelto entra por el búfer.
+		// Mantener pulsado encadena ataques; un clic suelto entra por el búfer.
 		bool wantsToAttack = _bufferedAttack > 0.0f || Input.IsActionPressed("attack_primary");
 
-		if (Sword == null || _cooldown > 0.0f || !wantsToAttack)
+		if (Weapons == null || !wantsToAttack)
 		{
 			return;
 		}
 
-		_bufferedAttack = 0.0f;
-		_cooldown = AttackCooldown;
-
-		SwingSound?.Play();
-		ShowSwing();
-
-		if (Sword.Strike() > 0)
+		if (Weapons.TryFire())
 		{
-			HitSound?.Play();
-		}
-	}
-
-	private void ShowSwing()
-	{
-		if (SwingVisual == null)
-		{
-			return;
-		}
-
-		SwingVisual.Visible = true;
-		_swingVisible = SwingVisualDuration;
-	}
-
-	private void UpdateSwingVisual(double delta)
-	{
-		if (_swingVisible <= 0.0f)
-		{
-			return;
-		}
-
-		_swingVisible -= (float)delta;
-
-		if (_swingVisible <= 0.0f && SwingVisual != null)
-		{
-			SwingVisual.Visible = false;
+			_bufferedAttack = 0.0f;
 		}
 	}
 
@@ -231,14 +195,7 @@ public partial class PlayerController : CharacterBody3D
 		_isDead = true;
 		_bufferedAttack = 0.0f;
 
-		if (SwingVisual != null)
-		{
-			SwingVisual.Visible = false;
-		}
-
-		// Diferido: la muerte llega desde un Strike() en pleno ciclo de física, y Godot
-		// bloquea tocar 'monitoring' dentro de una llamada de colisión.
-		Sword?.SetDeferred(Area3D.PropertyName.Monitoring, false);
+		Weapons?.Holster();
 	}
 
 	/// <summary>

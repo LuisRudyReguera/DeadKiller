@@ -88,6 +88,26 @@ la biblioteca estándar de Python. Son ondas sintetizadas, no grabaciones.
 el telegrafiado audible es criterio de cierre del hito 1.
 **Se sustituyen** por sonido real en el hito 6. El código no cambia: solo el `.wav`.
 
+### D-011 · Soltar las referencias a `Resource` en `_ExitTree`
+
+**Decidido.** Todo componente de C# que guarde un `Resource` en un campo lo pone a `null`
+al salir del árbol.
+**Por qué:** un campo de C# mantiene vivo el recurso más allá del cierre del motor, y
+Godot lo denuncia con «resources still in use at exit». Ha aparecido tres veces en este
+proyecto: al duplicar el material del licántropo, y al guardar el arma equipada y su
+sonido en el `WeaponHolder`. La consola limpia es criterio de cierre de todos los hitos.
+
+### D-012 · La entrada de acciones se lee por evento, nunca sondeando
+
+**Decidido.** Atacar, recargar y cambiar de arma se recogen en `_UnhandledInput`, no con
+`Input.IsActionPressed` dentro de `_PhysicsProcess`. El ataque además espera 0,15 s en un
+búfer por si llega durante la cadencia.
+**Por qué:** el sondeo pierde las pulsaciones más cortas que un fotograma de física
+(16 ms), y la acción desaparece sin dar ningún error. Se detectó jugando: parecía que el
+ataque tenía retardo, pero eran espadazos que no llegaban a ocurrir.
+**La rueda del ratón obliga:** no tiene estado «pulsado» que sondear, solo eventos.
+**Se mantiene el sondeo** solo para el movimiento, donde mantener la tecla es la norma.
+
 ---
 
 ## Pendientes de decidir

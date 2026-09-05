@@ -15,6 +15,7 @@
 /scripts     código C#, misma estructura que /scenes
 /scripts/components  componentes reutilizables sin escena propia
 /resources   recursos .tres (WeaponData, EnemyData…)
+/resources/weapons   un .tres por arma
 /models      modelos .glb
 /audio       sonidos y música
 /materials   materiales y shaders

@@ -6,11 +6,17 @@
 [ext_resource type="Script" path="res://scripts/components/HealthComponent.cs" id="4_health"]
 [ext_resource type="Script" path="res://scripts/components/HitboxComponent.cs" id="5_hitbox"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/werewolf/Werewolf.tscn" id="6_wolf"]
-[ext_resource type="AudioStream" path="res://audio/sword_swing.wav" id="7_swing"]
 [ext_resource type="AudioStream" path="res://audio/hit_impact.wav" id="8_impact"]
 [ext_resource type="Script" path="res://scripts/components/HitFlashComponent.cs" id="9_flash"]
 [ext_resource type="StandardMaterial3D" path="res://resources/hit_flash_material.tres" id="10_flashmat"]
 [ext_resource type="StandardMaterial3D" path="res://resources/sword_arc_material.tres" id="11_arcmat"]
+[ext_resource type="Script" path="res://scripts/weapons/WeaponHolder.cs" id="12_holder"]
+[ext_resource type="Script" path="res://scripts/weapons/AmmoPouch.cs" id="13_pouch"]
+[ext_resource type="Resource" path="res://resources/weapons/short_sword.tres" id="14_sword"]
+[ext_resource type="Resource" path="res://resources/weapons/short_bow.tres" id="15_bow"]
+[ext_resource type="Resource" path="res://resources/weapons/crossbow.tres" id="16_crossbow"]
+[ext_resource type="Resource" path="res://resources/weapons/flintlock_pistol.tres" id="17_pistol"]
+[ext_resource type="PackedScene" path="res://scenes/weapons/WeaponPickup.tscn" id="18_pickup"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_x60sr"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -35,7 +41,8 @@ height = 1.8
 [sub_resource type="BoxMesh" id="BoxMesh_wvhbo"]
 size = Vector3(0.15, 0.15, 0.6)
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_sword"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_melee"]
+resource_local_to_scene = true
 radius = 2.0
 
 [sub_resource type="PrismMesh" id="PrismMesh_arc"]
@@ -77,15 +84,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.25, 1.5, 0)
 use_collision = true
 size = Vector3(0.5, 3, 21)
 
-[node name="Player" type="CharacterBody3D" parent="." unique_id=1952670564 groups=["player"] node_paths=PackedStringArray("Health", "Sword", "SwingSound", "HitSound", "SwingVisual")]
+[node name="Player" type="CharacterBody3D" parent="." unique_id=1952670564 groups=["player"] node_paths=PackedStringArray("Health", "Weapons")]
 collision_layer = 2
 collision_mask = 5
 script = ExtResource("1_oqbmf")
 Health = NodePath("HealthComponent")
-Sword = NodePath("SwordHitbox")
-SwingSound = NodePath("SwingSound")
-HitSound = NodePath("HitSound")
-SwingVisual = NodePath("SwingArc")
+Weapons = NodePath("WeaponHolder")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player" unique_id=1704047257]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
@@ -104,7 +108,13 @@ script = ExtResource("4_health")
 MaxHealth = 100
 FlatArmor = 0
 
-[node name="SwordHitbox" type="Area3D" parent="Player"]
+[node name="HitFlash" type="Node" parent="Player" node_paths=PackedStringArray("Target", "Health")]
+script = ExtResource("9_flash")
+Target = NodePath("../MeshInstance3D")
+Health = NodePath("../HealthComponent")
+FlashMaterial = ExtResource("10_flashmat")
+
+[node name="MeleeHitbox" type="Area3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 collision_layer = 16
 collision_mask = 4
@@ -113,33 +123,63 @@ Damage = 25
 IgnoresArmor = false
 ArcDegrees = 60.0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Player/SwordHitbox"]
-shape = SubResource("SphereShape3D_sword")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player/MeleeHitbox"]
+shape = SubResource("SphereShape3D_melee")
 
-[node name="SwingSound" type="AudioStreamPlayer3D" parent="Player"]
+[node name="SwingArc" type="Node3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+visible = false
+
+[node name="ArcMesh" type="MeshInstance3D" parent="Player/SwingArc"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, -1)
+material_override = ExtResource("11_arcmat")
+mesh = SubResource("PrismMesh_arc")
+
+[node name="Muzzle" type="Node3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -0.7)
+
+[node name="AmmoPouch" type="Node" parent="Player"]
+script = ExtResource("13_pouch")
+Arrows = 30
+MaxArrows = 60
+Bolts = 10
+MaxBolts = 20
+Powder = 4
+MaxPowder = 8
+
+[node name="WeaponSound" type="AudioStreamPlayer3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
-stream = ExtResource("7_swing")
 unit_size = 25.0
 
-[node name="HitSound" type="AudioStreamPlayer3D" parent="Player"]
+[node name="ImpactSound" type="AudioStreamPlayer3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
 stream = ExtResource("8_impact")
 unit_size = 25.0
 
-[node name="SwingArc" type="MeshInstance3D" parent="Player"]
-transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 1, -1)
-visible = false
-material_override = ExtResource("11_arcmat")
-mesh = SubResource("PrismMesh_arc")
-
-[node name="HitFlash" type="Node" parent="Player" node_paths=PackedStringArray("Target", "Health")]
-script = ExtResource("9_flash")
-Target = NodePath("../MeshInstance3D")
-Health = NodePath("../HealthComponent")
-FlashMaterial = ExtResource("10_flashmat")
+[node name="WeaponHolder" type="Node" parent="Player" node_paths=PackedStringArray("MeleeHitbox", "MeleeShape", "Muzzle", "Ammo", "Sound", "ImpactSound", "SwingVisual")]
+script = ExtResource("12_holder")
+Weapons = Array[Resource]([ExtResource("14_sword"), ExtResource("15_bow")])
+MeleeHitbox = NodePath("../MeleeHitbox")
+MeleeShape = NodePath("../MeleeHitbox/CollisionShape3D")
+Muzzle = NodePath("../Muzzle")
+Ammo = NodePath("../AmmoPouch")
+Sound = NodePath("../WeaponSound")
+ImpactSound = NodePath("../ImpactSound")
+SwingVisual = NodePath("../SwingArc")
+SwingVisualDuration = 0.12
+SwingVisualBaseHalfWidth = 1.15
+SwingVisualBaseRange = 2.0
 
 [node name="Werewolf" parent="." instance=ExtResource("6_wolf")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -7)
+
+[node name="CrossbowPickup" parent="." instance=ExtResource("18_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 4)
+Weapon = ExtResource("16_crossbow")
+
+[node name="PistolPickup" parent="." instance=ExtResource("18_pickup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 5)
+Weapon = ExtResource("17_pistol")
 
 [node name="CameraRig" type="Node3D" parent="." unique_id=2096064119 node_paths=PackedStringArray("Target")]
 script = ExtResource("2_arrdh")

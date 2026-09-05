@@ -23,7 +23,7 @@
 
 | | Vida | Velocidad | Daño | Aviso previo | Alcance | Oro |
 |---|---|---|---|---|---|---|
-| Licántropo | 40 | 7 m/s (11 al embestir) | 15 | 0,4 s | 1,5 m | 5-10 |
+| Licántropo | 40 | 5 m/s (11 al embestir) | 15 | 0,4 s | 1,5 m | 5-10 |
 | Vampiro | 60 | 5 m/s | 12 | 0,5 s | 1,8 m | 10-20 |
 | Demonio menor | 150 (+5 armadura plana) | 2,5 m/s | 40 | 0,9 s | 2,2 m | 25-40 |
 
@@ -55,6 +55,15 @@ es justo.
 | Ballesta | 70 | 2,5 s de recarga | Virotes | Atraviesa un enemigo |
 | Pistola de chispa | 120 | 4,0 s de recarga | Pólvora | Un disparo por carga |
 | Antorcha | 5/s | — | — | Ilumina, prende fuego, ahuyenta |
+
+**Cómo se traducen estos números al `.tres`:** en las armas a distancia la cadencia
+**es** el tiempo de recarga, porque todas tienen cargador de 1. El arco no tiene una
+cadencia de 0,8 s aparte: tiene un cargador de una flecha y 0,8 s de recarga, que da
+exactamente lo mismo y además hace visible la recarga.
+
+Valores que hubo que proponer porque no estaban aquí: alcance de los proyectiles 30 m
+(la sala mide 20×20), velocidad de la ballesta 35 m/s y de la pistola 60 m/s, y
+dispersión de 1,5° en el arco y 3° en la pistola. La ballesta no dispersa.
 
 **Comprobación rápida:** con la espada, un licántropo cae en 2 golpes, un vampiro en 3
 y un demonio en 8. Al demonio conviene dispararle. Esa es la intención.
@@ -94,4 +103,4 @@ Las flechas se pueden recuperar del suelo tras dispararlas (~50% de recuperació
 
 | Fecha | Valor | Antes → Después | Motivo |
 |---|---|---|---|
-| — | — | — | — |
+| 2026-09-05 | Velocidad del licántropo | 7 → 5 m/s | A 7 m/s era más rápido que el jugador (5,5) y no se podía retroceder nunca. `DESIGN.md` dice que se combate «retrocediendo y disparando», así que perseguir más rápido que el jugador contradecía su propio contraataque. La embestida sigue a 11 m/s: la amenaza está ahí, no en la persecución. |

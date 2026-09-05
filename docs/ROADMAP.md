@@ -10,13 +10,13 @@ cierre. Nada de "ya lo arreglo luego".
 
 ## Estado actual
 
-**Hito activo:** 1 — Primer combate
-**Hecho:** hito 0 cerrado. El hito 1 está **implementado y verificado sin ventana**: el
-licántropo recorre `Inactivo → Alerta → Persecución → Preparar → Atacar → Recuperación`,
-muerde por 15, muere de dos espadazos y ambas muertes reinician la escena. Consola limpia.
-**Siguiente tarea:** probarlo a mano en Godot. Falta confirmar lo único que no se puede
-comprobar sin ver la pantalla: que el telegrafiado **se vea** (vira a ámbar y se enciende)
-y que el combate se sienta justo.
+**Hito activo:** 2 — Armas
+**Hecho:** hitos 0 y 1 cerrados. El hito 2 está **implementado y verificado sin ventana**:
+cuatro armas definidas solo con `.tres`, cambio con la rueda, arco y ballesta disparando
+proyectiles con munición separada por tipo, recarga, y armas recogibles del suelo.
+**Siguiente tarea:** probarlo a mano. Falta lo que no se puede comprobar sin pantalla ni
+ratón: que la rueda cambie de arma con soltura, que apuntar con el arco sea cómodo, y
+cuánta munición se gasta de verdad en un asalto.
 
 **Bloqueos:** ninguno.
 
@@ -40,24 +40,24 @@ Cerrado cuando:
 El bucle mínimo del juego: matar o morir.
 
 Cerrado cuando:
-- [ ] Un licántropo pasa por `Inactivo → Alerta → Persecución → Preparar → Atacar`
-- [ ] **Telegrafía el ataque** de forma visible y audible antes de ejecutarlo
-- [ ] Puede matar al jugador; el jugador puede matarlo con la espada
-- [ ] Ambas muertes reinician la escena limpiamente
-- [ ] La vida vive en un `HealthComponent` reutilizable, no en la clase del enemigo
-- [ ] Consola limpia
+- [x] Un licántropo pasa por `Inactivo → Alerta → Persecución → Preparar → Atacar`
+- [x] **Telegrafía el ataque** de forma visible y audible antes de ejecutarlo
+- [x] Puede matar al jugador; el jugador puede matarlo con la espada
+- [x] Ambas muertes reinician la escena limpiamente
+- [x] La vida vive en un `HealthComponent` reutilizable, no en la clase del enemigo
+- [x] Consola limpia
 
 ## Hito 2 — Armas
 
 El sistema guiado por datos que sostiene todo lo demás.
 
 Cerrado cuando:
-- [ ] Existen dos armas definidas **solo con archivos `.tres`**, sin clases nuevas
-- [ ] Se cambia entre ellas con rueda o teclas
-- [ ] El arco dispara proyectiles con munición finita y se recarga
-- [ ] La munición está separada por tipo (flechas / virotes / pólvora)
-- [ ] Se pueden recoger armas del suelo
-- [ ] **Prueba real:** añadir una tercera arma no requiere tocar ningún `.cs`
+- [x] Existen dos armas definidas **solo con archivos `.tres`**, sin clases nuevas
+- [x] Se cambia entre ellas con rueda o teclas
+- [x] El arco dispara proyectiles con munición finita y se recarga
+- [x] La munición está separada por tipo (flechas / virotes / pólvora)
+- [x] Se pueden recoger armas del suelo
+- [x] **Prueba real:** añadir una tercera arma no requiere tocar ningún `.cs`
 
 ## Hito 3 — Bestiario
 

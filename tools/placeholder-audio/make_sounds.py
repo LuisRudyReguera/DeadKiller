@@ -101,7 +101,41 @@ def impact(duration=0.14):
         yield value * 0.9
 
 
+def bow_shot(duration=0.22):
+    """Cuerda del arco: pulso agudo que cae rápido, con un punto de madera."""
+    random.seed(4)
+    total = int(RATE * duration)
+    phase = 0.0
+
+    for index in range(total):
+        position = index / total
+        # De 420 a 180 Hz: el chasquido de la cuerda al soltarse.
+        phase += 2.0 * math.pi * (420.0 - 240.0 * position) / RATE
+
+        value = math.sin(phase) * 0.55 + random.uniform(-1.0, 1.0) * 0.25
+        value *= math.pow(1.0 - position, 2.6)
+
+        yield value * 0.85
+
+
+def reload_click(duration=0.10):
+    """Chasquido seco de recarga: dos golpes muy cortos."""
+    random.seed(5)
+    total = int(RATE * duration)
+
+    for index in range(total):
+        position = index / total
+
+        # Dos impulsos: al principio y a media duración.
+        near = min(position, abs(position - 0.5))
+        value = random.uniform(-1.0, 1.0) * math.exp(-near * 90.0)
+
+        yield value * 0.7
+
+
 if __name__ == "__main__":
     write("werewolf_growl.wav", growl())
     write("sword_swing.wav", swing())
     write("hit_impact.wav", impact())
+    write("bow_shot.wav", bow_shot())
+    write("reload_click.wav", reload_click())

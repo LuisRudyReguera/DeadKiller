@@ -31,6 +31,7 @@ public partial class Enemy : CharacterBody3D
     [Export] public Node3D Body { get; set; }
 
     [Export] public BodyEffects Effects { get; set; }
+    [Export] public ProceduralAnimator Animator { get; set; }
 
     [Export] public AudioStreamPlayer3D Voice { get; set; }
 
@@ -43,6 +44,7 @@ public partial class Enemy : CharacterBody3D
 
     private float _gravity;
     private Vector3 _lungeDirection = Vector3.Forward;
+    private bool _animatedLunge;
 
     // Copias de lo que hace falta al morir: para entonces Data ya puede estar suelto.
     private PackedScene _drop;
@@ -214,6 +216,7 @@ public partial class Enemy : CharacterBody3D
     /// </summary>
     public void AimLunge()
     {
+        _animatedLunge = false;
         Vector3 direction = HasTarget ? DirectionToTarget() : -GlobalBasis.Z with { Y = 0 };
         _lungeDirection = direction.Normalized();
 
@@ -222,6 +225,11 @@ public partial class Enemy : CharacterBody3D
 
     public void Lunge(double delta)
     {
+        if (!_animatedLunge)
+        {
+            Animator?.PlayAttack();
+            _animatedLunge = true;
+        }
         Velocity = new Vector3(
             _lungeDirection.X * Data.LungeSpeed,
             Velocity.Y,
@@ -275,6 +283,11 @@ public partial class Enemy : CharacterBody3D
     /// </summary>
     public void SetTelegraph(bool active)
     {
+        if (Animator != null)
+        {
+            if (Data != null) Animator.PrepareDuration = Data.AttackWarning;
+            Animator.SetPreparing(active);
+        }
         Effects?.SetTelegraph(active);
     }
 

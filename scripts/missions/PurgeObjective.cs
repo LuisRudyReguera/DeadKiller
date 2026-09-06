@@ -7,10 +7,10 @@ namespace DeadKillers.Missions;
 public partial class PurgeObjective : Objective
 {
     public override string ProgressText => IsComplete
-        ? $"{Description} - hecho"
-        : $"{Description} - quedan {Mission.RemainingEnemies} de {Mission.TotalEnemies}"
+        ? $"{Description} — hecho"
+        : $"{Description} — quedan {Mission.RemainingEnemies} de {Mission.TotalEnemies}"
           + (Mission.PendingAmbushes > 0
-              ? $" - emboscadas pendientes: {Mission.PendingAmbushes}"
+              ? $" — emboscadas pendientes: {Mission.PendingAmbushes}"
               : "");
 
     public override void Setup(Mission mission)

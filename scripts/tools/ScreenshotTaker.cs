@@ -53,6 +53,14 @@ public partial class ScreenshotTaker : Node
 
     private void Capture(int number)
     {
+        // Sin ventana no hay nada que capturar y GetImage revienta. Se avisa y se sale.
+        if (DisplayServer.GetName() == "headless")
+        {
+            GD.PushWarning($"{Name}: no se puede capturar sin ventana; se omite.");
+            _next = Moments.Length;
+            return;
+        }
+
         Image image = GetViewport().GetTexture()?.GetImage();
 
         if (image == null)

@@ -37,4 +37,4 @@ Una orden sin criterios de aceptación no es una orden, es una sugerencia.
 
 | Orden | Estado |
 |---|---|
-| `001-animacion-procedural.md` | Sin empezar |
+| `001-animacion-procedural.md` | **Hecha y verificada.** Codex la implementó; Claude comprobó los valores en ejecución |

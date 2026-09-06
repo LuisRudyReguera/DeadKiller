@@ -1,5 +1,7 @@
 [gd_scene format=3]
 
+[ext_resource type="Script" path="res://scripts/components/ProceduralAnimator.cs" id="50_animator"]
+
 [ext_resource type="Script" path="res://scripts/enemies/Enemy.cs" id="1_enemy"]
 [ext_resource type="Resource" path="res://resources/enemies/demon.tres" id="2_data"]
 [ext_resource type="Script" path="res://scripts/components/HealthComponent.cs" id="3_health"]
@@ -23,7 +25,7 @@ height = 2.4
 resource_local_to_scene = true
 radius = 2.2
 
-[node name="Demon" type="CharacterBody3D" groups=["enemy"] node_paths=PackedStringArray("Health", "States", "Attack", "AttackShape", "Body", "Voice", "Effects")]
+[node name="Demon" type="CharacterBody3D" groups=["enemy"] node_paths=PackedStringArray("Health", "States", "Attack", "AttackShape", "Body", "Voice", "Effects", "Animator")]
 collision_layer = 4
 collision_mask = 3
 script = ExtResource("1_enemy")
@@ -35,6 +37,7 @@ AttackShape = NodePath("AttackHitbox/CollisionShape3D")
 Body = NodePath("Model")
 Voice = NodePath("Voice")
 Effects = NodePath("BodyEffects")
+Animator = NodePath("ProceduralAnimator")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
@@ -90,3 +93,8 @@ script = ExtResource("12_attack")
 
 [node name="Recovery" type="Node" parent="StateMachine"]
 script = ExtResource("13_recovery")
+
+[node name="ProceduralAnimator" type="Node" parent="." node_paths=PackedStringArray("Body", "Health")]
+script = ExtResource("50_animator")
+Body = NodePath("../Model")
+Health = NodePath("../HealthComponent")

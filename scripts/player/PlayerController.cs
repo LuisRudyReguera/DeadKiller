@@ -22,6 +22,7 @@ public partial class PlayerController : CharacterBody3D
 	[Export] public HealthComponent Health { get; set; }
 
 	[Export] public WeaponHolder Weapons { get; set; }
+	[Export] public ProceduralAnimator Animator { get; set; }
 
 	// Cuánto sobrevive un clic sin poder ejecutarse. Un clic rápido dura menos que un
 	// fotograma de física, así que sin este margen se perdería.
@@ -184,7 +185,11 @@ public partial class PlayerController : CharacterBody3D
 			return;
 		}
 
-		if (Weapons.TryFire())
+		int attacksBefore = Weapons.AttacksMade;
+		bool fired = Weapons.TryFire();
+		// Un golpe al aire también cuenta como ataque, aunque TryFire devuelva false.
+		if (Weapons.AttacksMade > attacksBefore) Animator?.PlayAttack();
+		if (fired)
 		{
 			_bufferedAttack = 0.0f;
 		}

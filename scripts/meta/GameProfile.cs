@@ -39,7 +39,11 @@ public sealed class GameProfile
         _ => 0,
     };
 
+    private static bool IsValidUpgrade(UpgradeKind kind) =>
+        kind is UpgradeKind.Health or UpgradeKind.Reload or UpgradeKind.Ammo;
+
     public bool CanBuy(UpgradeKind kind) =>
+        IsValidUpgrade(kind) && LevelOf(kind) >= 0 &&
         LevelOf(kind) < MaxUpgradeLevel && Gold >= PriceOf(kind);
 
     /// <summary>
@@ -49,7 +53,7 @@ public sealed class GameProfile
     {
         int level = LevelOf(kind);
 
-        if (level >= MaxUpgradeLevel)
+        if (!IsValidUpgrade(kind) || level < 0 || level >= MaxUpgradeLevel)
         {
             return 0;
         }
@@ -81,7 +85,7 @@ public sealed class GameProfile
             case UpgradeKind.Reload:
                 ReloadLevel++;
                 break;
-            default:
+            case UpgradeKind.Ammo:
                 AmmoLevel++;
                 break;
         }
@@ -133,27 +137,44 @@ public sealed class GameProfile
             return new GameProfile();
         }
 
-        // Un guardado corrupto no debe impedir jugar: se empieza de cero y se avisa.
-        if (Json.ParseString(file.GetAsText()).VariantType != Variant.Type.Dictionary)
+        return FromJson(file.GetAsText());
+    }
+
+    // Separado del disco para verificar perfiles dañados sin tocar la partida real.
+    internal static GameProfile FromJson(string text)
+    {
+        using var json = new Json();
+        if (json.Parse(text) != Error.Ok || json.Data.VariantType != Variant.Type.Dictionary)
         {
-            GD.PushWarning($"{SavePath} no tiene el formato esperado; se empieza de cero.");
             return new GameProfile();
         }
 
-        var data = Json.ParseString(file.GetAsText()).AsGodotDictionary();
+        var data = json.Data.AsGodotDictionary();
 
         return new GameProfile
         {
             Gold = Read(data, "gold"),
             MissionsCompleted = Read(data, "missions"),
-            HealthLevel = Read(data, "health"),
-            ReloadLevel = Read(data, "reload"),
-            AmmoLevel = Read(data, "ammo"),
+            HealthLevel = Read(data, "health", MaxUpgradeLevel),
+            ReloadLevel = Read(data, "reload", MaxUpgradeLevel),
+            AmmoLevel = Read(data, "ammo", MaxUpgradeLevel),
         };
     }
 
-    private static int Read(Godot.Collections.Dictionary data, string key)
+    private static int Read(Godot.Collections.Dictionary data, string key, int maximum = int.MaxValue)
     {
-        return data.TryGetValue(key, out Variant value) ? (int)value.AsDouble() : 0;
+        if (!data.TryGetValue(key, out Variant value) ||
+            value.VariantType is not (Variant.Type.Int or Variant.Type.Float))
+        {
+            return 0;
+        }
+
+        double number = value.AsDouble();
+        if (!double.IsFinite(number) || number < 0 || number != System.Math.Truncate(number))
+        {
+            return 0;
+        }
+
+        return (int)System.Math.Min(number, maximum);
     }
 }

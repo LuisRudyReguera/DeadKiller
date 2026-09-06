@@ -74,6 +74,7 @@ public partial class WeaponHolder : Node
     private float _cooldown;
     private float _reloadLeft;
     private float _swingLeft;
+    private readonly System.Collections.Generic.Dictionary<WeaponData, int> _magazines = new();
 
     public override void _Ready()
     {
@@ -111,6 +112,7 @@ public partial class WeaponHolder : Node
     /// </summary>
     public override void _ExitTree()
     {
+        _magazines.Clear();
         Current = null;
         Weapons = null;
 
@@ -151,12 +153,26 @@ public partial class WeaponHolder : Node
             return;
         }
 
-        CurrentIndex = Mathf.PosMod(index, Weapons.Count);
-        Current = Weapons[CurrentIndex];
+        int nextIndex = Mathf.PosMod(index, Weapons.Count);
+        WeaponData next = Weapons[nextIndex];
+        if (Current != null && Current == next)
+        {
+            return;
+        }
+
+        // La munición cargada pertenece al arma, no a la ranura actualmente visible.
+        if (Current != null && Current.UsesMagazine)
+        {
+            _magazines[Current] = InMagazine;
+        }
+
+        CurrentIndex = nextIndex;
+        Current = next;
 
         _cooldown = 0.0f;
         _reloadLeft = 0.0f;
-        InMagazine = 0;
+        InMagazine = Current != null && _magazines.TryGetValue(Current, out int loaded)
+            ? loaded : 0;
 
         ApplyMeleeProfile();
         ShowWeaponModel();
@@ -164,8 +180,8 @@ public partial class WeaponHolder : Node
         EmitSignal(SignalName.WeaponChanged, CurrentIndex, Current?.DisplayName ?? string.Empty);
         NotifyAmmoState();
 
-        // Un arma con cargador llega vacía: se carga sola al sacarla.
-        if (Current != null && Current.UsesMagazine)
+        // Solo cargar al sacarla si está vacía; una carga parcial sigue disponible.
+        if (Current != null && Current.UsesMagazine && InMagazine == 0)
         {
             TryReload();
         }

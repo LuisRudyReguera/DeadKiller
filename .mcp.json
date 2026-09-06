@@ -1,8 +1,8 @@
 {
   "mcpServers": {
     "deadkillers-docs": {
-      "command": "python",
-      "args": ["tools/docs-mcp/server.py"]
+      "command": "C:/Users/Administrator/AppData/Local/Programs/Python/Python312/python.exe",
+      "args": ["C:/Users/Administrator/DeadKillers/tools/docs-mcp/server.py"]
     }
   }
 }

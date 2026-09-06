@@ -1,0 +1,9 @@
+CONEXION CLAUDE - VERIFICADA CON CODIGO REAL
+
+Claude Code instalado y autenticado.
+MCP probado con mensaje sintetico y revision real de los tres archivos autorizados:
+Mission.cs, PurgeObjective.cs y EnemySpawner.cs.
+Respuesta guardada y contrastada en tools/docs-mcp/ultima-revision-claude.md.
+No se modifico el juego como resultado de esta revision.
+Las consultas consumen uso de Claude; el ahorro total de tokens no esta garantizado.
+Si las herramientas no aparecen en Codex, reinicia la aplicacion para recargar el MCP.

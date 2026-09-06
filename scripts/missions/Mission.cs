@@ -1,4 +1,7 @@
 using Godot;
+using System;
+using System.Collections.Generic;
+using DeadKillers.Level;
 using DeadKillers.Components;
 
 namespace DeadKillers.Missions;
@@ -35,6 +38,17 @@ public partial class Mission : Node
 
     // --- Cifras del resumen ---
 
+    [Signal]
+    public delegate void EnemyRosterChangedEventHandler();
+
+    public int TotalEnemies { get; private set; }
+    public int RemainingEnemies { get; private set; }
+    public int PendingAmbushes => _pendingSpawners.Count;
+
+    private readonly Dictionary<HealthComponent, HealthComponent.DiedEventHandler> _enemyHandlers = new();
+    private readonly Dictionary<EnemySpawner, LevelResponder.ActivatedEventHandler> _spawnerHandlers = new();
+    private readonly HashSet<EnemySpawner> _pendingSpawners = new();
+
     public int Kills { get; private set; }
 
     public int Gold { get; private set; }
@@ -59,6 +73,9 @@ public partial class Mission : Node
 
     public override void _Ready()
     {
+        WatchSpawners(GetParent() ?? this);
+        WatchEnemies();
+
         foreach (Node child in (ObjectiveRoot ?? this).GetChildren())
         {
             if (child is not Objective objective)
@@ -71,7 +88,6 @@ public partial class Mission : Node
             objective.Changed += OnObjectiveChanged;
         }
 
-        WatchEnemies();
         WatchPlayer();
 
         EmitSignal(SignalName.ObjectivesChanged);
@@ -107,7 +123,10 @@ public partial class Mission : Node
     /// <summary>Lo llama la salida cuando el jugador la pisa con todo cumplido.</summary>
     public void Complete()
     {
-        End(won: true);
+        if (ExitOpen)
+        {
+            End(won: true);
+        }
     }
 
     // ------------------------------------------------------------------ interno
@@ -116,12 +135,73 @@ public partial class Mission : Node
     {
         foreach (Node enemy in GetTree().GetNodesInGroup(Groups.Enemy))
         {
-            HealthComponent health = HealthComponent.FindIn(enemy);
-            if (health != null)
-            {
-                health.Died += OnEnemyDied;
-            }
+            RegisterEnemy(enemy);
         }
+    }
+
+    private void RegisterEnemy(Node enemy)
+    {
+        HealthComponent health = HealthComponent.FindIn(enemy);
+        if (IsOver || health == null || _enemyHandlers.ContainsKey(health))
+        {
+            return;
+        }
+
+        // Un hermano puede no haber ejecutado Ready cuando se registra la misión.
+        if (health.IsNodeReady() && health.IsDead)
+        {
+            return;
+        }
+
+        bool counted = false;
+        HealthComponent.DiedEventHandler died = () =>
+        {
+            if (counted || IsOver) return;
+            counted = true;
+            Kills++;
+            RemainingEnemies--;
+            EmitSignal(SignalName.EnemyRosterChanged);
+        };
+        _enemyHandlers.Add(health, died);
+        health.Died += died;
+        TotalEnemies++;
+        RemainingEnemies++;
+        EmitSignal(SignalName.EnemyRosterChanged);
+    }
+
+    private void OnEnemySpawned(Node3D enemy) => RegisterEnemy(enemy);
+
+    private void WatchSpawners(Node root)
+    {
+        if (root is EnemySpawner spawner && spawner.EnemyScene != null)
+        {
+            if (!spawner.HasActivated) _pendingSpawners.Add(spawner);
+            LevelResponder.ActivatedEventHandler activated = () =>
+            {
+                // Spawned ya registró toda la oleada antes de Activated.
+                _pendingSpawners.Remove(spawner);
+                EmitSignal(SignalName.EnemyRosterChanged);
+            };
+            _spawnerHandlers.Add(spawner, activated);
+            spawner.Spawned += OnEnemySpawned;
+            spawner.Activated += activated;
+        }
+        foreach (Node child in root.GetChildren()) WatchSpawners(child);
+    }
+
+    public override void _ExitTree()
+    {
+        foreach (var pair in _enemyHandlers)
+            if (IsInstanceValid(pair.Key)) pair.Key.Died -= pair.Value;
+        foreach (var pair in _spawnerHandlers)
+        {
+            if (!IsInstanceValid(pair.Key)) continue;
+            pair.Key.Spawned -= OnEnemySpawned;
+            pair.Key.Activated -= pair.Value;
+        }
+        _enemyHandlers.Clear();
+        _spawnerHandlers.Clear();
+        _pendingSpawners.Clear();
     }
 
     private void WatchPlayer()
@@ -136,12 +216,6 @@ public partial class Mission : Node
         }
 
         health.Died += OnPlayerDied;
-    }
-
-    private void OnEnemyDied()
-    {
-        Kills++;
-        CheckObjectives();
     }
 
     private void OnPlayerDied()

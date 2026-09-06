@@ -1,55 +1,34 @@
 using Godot;
-using DeadKillers.Components;
 
 namespace DeadKillers.Missions;
 
-/// <summary>
-/// Purga: limpiar la zona de monstruos. Cuenta los enemigos vivos al empezar y se cumple
-/// cuando no queda ninguno.
-/// </summary>
+/// <summary>Purga los enemigos iniciales y las emboscadas pendientes del nivel.</summary>
 [GlobalClass]
 public partial class PurgeObjective : Objective
 {
-    private int _total;
-    private int _remaining;
-
     public override string ProgressText => IsComplete
-        ? $"{Description} — hecho"
-        : $"{Description} — quedan {_remaining} de {_total}";
+        ? $"{Description} - hecho"
+        : $"{Description} - quedan {Mission.RemainingEnemies} de {Mission.TotalEnemies}"
+          + (Mission.PendingAmbushes > 0
+              ? $" - emboscadas pendientes: {Mission.PendingAmbushes}"
+              : "");
 
     public override void Setup(Mission mission)
     {
         base.Setup(mission);
-
-        foreach (Node enemy in GetTree().GetNodesInGroup(Groups.Enemy))
-        {
-            HealthComponent health = HealthComponent.FindIn(enemy);
-            if (health == null)
-            {
-                continue;
-            }
-
-            _total++;
-            health.Died += OnEnemyDied;
-        }
-
-        _remaining = _total;
-
-        // Una purga sin nadie a quien purgar ya está cumplida.
-        if (_total == 0)
-        {
-            MarkComplete();
-        }
+        mission.EnemyRosterChanged += RefreshProgress;
+        RefreshProgress();
     }
 
-    private void OnEnemyDied()
+    public override void _ExitTree()
     {
-        _remaining--;
-        MarkChanged();
+        if (IsInstanceValid(Mission))
+            Mission.EnemyRosterChanged -= RefreshProgress;
+    }
 
-        if (_remaining <= 0)
-        {
-            MarkComplete();
-        }
+    private void RefreshProgress()
+    {
+        IsComplete = Mission.RemainingEnemies == 0 && Mission.PendingAmbushes == 0;
+        MarkChanged();
     }
 }

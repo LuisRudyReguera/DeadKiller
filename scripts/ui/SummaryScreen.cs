@@ -72,6 +72,7 @@ public partial class SummaryScreen : CanvasLayer
         if (HintLabel != null)
         {
             HintLabel.Visible = false;
+            HintLabel.Text = won ? "Pulsa E para volver a la tienda" : "Pulsa E para reintentar";
         }
 
         if (TitleLabel != null)

@@ -19,7 +19,7 @@ from pathlib import Path
 
 PROTOCOL_VERSION = "2024-11-05"
 SERVER_NAME = "deadkillers-docs"
-SERVER_VERSION = "1.0.0"
+SERVER_VERSION = "1.1.0"
 
 # server.py está en <raíz>/tools/docs-mcp/, así que la raíz son dos niveles arriba.
 ROOT = Path(__file__).resolve().parents[2]
@@ -253,6 +253,9 @@ TOOLS = [
     },
 ]
 
+from claude_bridge import TOOLS as CLAUDE_TOOLS
+
+TOOLS.extend(CLAUDE_TOOLS)
 BY_NAME = {tool["name"]: tool for tool in TOOLS}
 
 

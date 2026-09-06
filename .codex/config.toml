@@ -1,0 +1,5 @@
+[mcp_servers.deadkillers-docs]
+command = 'C:\Users\Administrator\AppData\Local\Programs\Python\Python312\python.exe'
+args = ['C:\Users\Administrator\DeadKillers\tools\docs-mcp\server.py']
+
+tool_timeout_sec = 150

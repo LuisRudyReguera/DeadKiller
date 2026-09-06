@@ -28,3 +28,7 @@ obj/
 
 # Godot importa cualquier imagen del proyecto; las referencias no son assets
 docs/references/*.import
+
+# Cache de Python de las herramientas
+__pycache__/
+*.pyc

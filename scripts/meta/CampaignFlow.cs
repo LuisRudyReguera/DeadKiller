@@ -22,6 +22,7 @@ public partial class CampaignFlow : Node
     private Mission _mission;
     private bool _won;
     private float _sinceEnd = -1.0f;
+    private bool _continueArmed;
 
     public override void _Ready()
     {
@@ -50,7 +51,14 @@ public partial class CampaignFlow : Node
             return;
         }
 
-        if (!Input.IsActionJustPressed("interact") && !Input.IsActionJustPressed("attack_primary"))
+        // Exigir soltar E después del margen evita reutilizar la pulsación de combate.
+        if (!_continueArmed)
+        {
+            _continueArmed = !Input.IsActionPressed("interact");
+            return;
+        }
+
+        if (!Input.IsActionJustPressed("interact"))
         {
             return;
         }
@@ -75,6 +83,7 @@ public partial class CampaignFlow : Node
     {
         _won = won;
         _sinceEnd = 0.0f;
+        _continueArmed = false;
 
         if (!won)
         {

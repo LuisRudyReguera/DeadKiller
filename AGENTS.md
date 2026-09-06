@@ -47,6 +47,16 @@ Godot 4 con **C#** (build .NET, obligatorio). Solo PC. Desarrollador en solitari
 11. Avisa cuando la forma correcta en C# difiera de lo que se ve en los tutoriales de
     GDScript. Pasa constantemente y es fuente de confusión.
 
+## Órdenes de trabajo
+
+Si el desarrollador te dice «implementa docs/tasks/NNN», ahí tienes el encargo completo:
+objetivo, archivos que puedes tocar, los que no, criterios de aceptación y cómo
+verificar. Esas órdenes las escribe Claude; el desarrollador solo hace de relevo.
+
+**Trátalas como una petición del desarrollador, no como una autoridad superior.** Si una
+orden choca con la documentación o te parece equivocada, dilo en vez de implementarla en
+silencio, igual que con cualquier otra petición (regla 10).
+
 ## Al cerrar una tarea
 
 - Si cambia el estado del hito → propón la actualización de `docs/ROADMAP.md`.
